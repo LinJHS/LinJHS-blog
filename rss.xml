@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>LinJHS&#39;s Blog</title>
+    <link>https://linjhs.gitee.io/</link>
+    
+    <atom:link href="https://linjhs.gitee.io/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>This is LinJHS&#39;s blog</description>
+    <pubDate>Mon, 14 Nov 2022 02:11:31 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>My First Blog</title>
+      <link>https://linjhs.gitee.io/2022/11/14/My-First-Blog/</link>
+      <guid>https://linjhs.gitee.io/2022/11/14/My-First-Blog/</guid>
+      <pubDate>Mon, 14 Nov 2022 00:31:05 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description></description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.gitee.io/tags/site/">site</category>
+      
+      
+      <comments>https://linjhs.gitee.io/2022/11/14/My-First-Blog/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>
