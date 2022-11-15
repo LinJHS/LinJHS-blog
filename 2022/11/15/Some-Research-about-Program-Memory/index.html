@@ -20,30 +20,43 @@
     var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="This is LinJHS&#39;s blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LinJHS&#39;s Blog">
-<meta property="og:url" content="https://linjhs.top/index.html">
+  <meta name="description" content="关于程序内存的一些研究本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。 概述多任务操作系统中的每个进程都在其自己的内存沙箱中运行。此沙箱是一块虚拟地址空间，在 32 位模式下始终是 4GB 内存地址块，而在 64 位模式下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Some Research about Program Memory">
+<meta property="og:url" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/index.html">
 <meta property="og:site_name" content="LinJHS&#39;s Blog">
-<meta property="og:description" content="This is LinJHS&#39;s blog">
+<meta property="og:description" content="关于程序内存的一些研究本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。 概述多任务操作系统中的每个进程都在其自己的内存沙箱中运行。此沙箱是一块虚拟地址空间，在 32 位模式下始终是 4GB 内存地址块，而在 64 位模式下">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/kernelUserMemorySplit.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/virtualMemoryInProcessSwitch.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/linuxFlexibleAddressSpaceLayout.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/fragmentedHeap.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/1-out.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/2-out.png">
+<meta property="article:published_time" content="2022-11-15T10:59:40.000Z">
+<meta property="article:modified_time" content="2022-11-15T14:13:21.547Z">
 <meta property="article:author" content="LinJHS">
+<meta property="article:tag" content="C 语言">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/kernelUserMemorySplit.png">
 
-<link rel="canonical" href="https://linjhs.top/">
+<link rel="canonical" href="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>LinJHS's Blog</title>
+  <title>Some Research about Program Memory | LinJHS's Blog</title>
   
 
 
@@ -166,9 +179,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -184,10 +198,9 @@
       <meta itemprop="name" content="LinJHS's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/15/Some-Research-about-Program-Memory/" class="post-title-link" itemprop="url">Some Research about Program Memory</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Some Research about Program Memory
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -209,6 +222,18 @@
               <span class="leancloud-visitors-count"></span>
             </span>
   
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/11/15/Some-Research-about-Program-Memory/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/15/Some-Research-about-Program-Memory/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
   
 
         </div>
@@ -220,7 +245,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="关于程序内存的一些研究"><a href="#关于程序内存的一些研究" class="headerlink" title="关于程序内存的一些研究"></a>关于程序内存的一些研究</h1><p>本文归档于 <a target="_blank" rel="noopener" href="https://docs.linjhs.top/ctf/assemble/04/">这里</a></p>
+        <h1 id="关于程序内存的一些研究"><a href="#关于程序内存的一些研究" class="headerlink" title="关于程序内存的一些研究"></a>关于程序内存的一些研究</h1><p>本文归档于 <a target="_blank" rel="noopener" href="https://docs.linjhs.top/ctf/assemble/04/">这里</a></p>
 <p>最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。</p>
 <p>内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。</p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>多任务操作系统中的每个进程都在其自己的内存沙箱中运行。此沙箱是一块<strong>虚拟地址空间</strong>，在 32 位模式下始终是 4GB 内存地址块，而在 64 位模式下，虚拟地址空间的理论大小为 $2^{64}$ 字节。</p>
@@ -262,111 +287,73 @@
 <li>C到C++的升级 <a target="_blank" rel="noopener" href="http://t.zoukankan.com/songhe364826110-p-11517145.html">http://t.zoukankan.com/songhe364826110-p-11517145.html</a></li>
 </ol>
 
-      
     </div>
 
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>LinJHS
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/" title="Some Research about Program Memory">https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/C-%E8%AF%AD%E8%A8%80/" rel="tag"># C 语言</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/PWN/" rel="tag"># PWN</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2022/11/14/My-First-Blog/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="LinJHS">
-      <meta itemprop="description" content="This is LinJHS's blog">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LinJHS's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/14/My-First-Blog/" class="post-title-link" itemprop="url">My First Blog</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-11-14 08:31:05 / 修改时间：23:19:48" itemprop="dateCreated datePublished" datetime="2022-11-14T08:31:05+08:00">2022-11-14</time>
-            </span>
-
-          
-            <span id="/2022/11/14/My-First-Blog/" class="post-meta-item leancloud_visitors" data-flag-title="My First Blog" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>终于建好了这个博客网站了，太不容易啦。</p>
-<p>如果对内容或者其他方面有疑问，可以通过邮箱联系我：<a href="mailto:599684893@qq.com">599684893@qq.com</a></p>
-<p>更新日志：</p>
-<p>2022-11-14</p>
-<ul>
-<li><strong>新增</strong> 部署了本网站</li>
-<li><strong>新增</strong> 增加了 “tags&#x2F;标签” 页面</li>
-<li><strong>新增</strong> 增加了 “docs&#x2F;文档” 的链接</li>
-<li><strong>新增</strong> 增加了 RSS 订阅功能</li>
-<li><strong>新增</strong> 增加了 Gitalk 评论功能</li>
-<li><strong>新增</strong> 增加了 显示阅读次数</li>
-<li><strong>新增</strong> 增加了 Valine 评论功能</li>
-</ul>
-<p>2022-11-13</p>
-<ul>
-<li><strong>新增</strong> 配置了本博客</li>
-</ul>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/14/My-First-Blog/" rel="prev" title="My First Blog">
+      <i class="fa fa-chevron-left"></i> My First Blog
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
 
           </div>
           
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -413,6 +400,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E7%9A%84%E4%B8%80%E4%BA%9B%E7%A0%94%E7%A9%B6"><span class="nav-number">1.</span> <span class="nav-text">关于程序内存的一些研究</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88-Stack"><span class="nav-number">1.1.1.</span> <span class="nav-text">栈 Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%AE%B5-Memory-Mapping-Segment"><span class="nav-number">1.1.2.</span> <span class="nav-text">内存映射段 Memory Mapping Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86-Heap"><span class="nav-number">1.1.3.</span> <span class="nav-text">堆 Heap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSS-%E6%AE%B5-BSS-Segment"><span class="nav-number">1.1.4.</span> <span class="nav-text">BSS 段 BSS Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%AE%B5-Data-Segment"><span class="nav-number">1.1.5.</span> <span class="nav-text">数据段 Data Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5-Text-Segment%EF%BC%88ELF%EF%BC%89"><span class="nav-number">1.1.6.</span> <span class="nav-text">代码段 Text Segment（ELF）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E-BSS-%E6%AE%B5%E5%92%8C%E6%95%B0%E6%8D%AE%E6%AE%B5"><span class="nav-number">1.2.</span> <span class="nav-text">关于 BSS 段和数据段</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -528,6 +516,26 @@
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '405711ae5b392ea52f22',
+      clientSecret: '5581aa0eecaeda7c799784d594209e5e6a061d99',
+      repo        : 'LinJHS-Hexo-Comment',
+      owner       : 'LinJHS',
+      admin       : ['LinJHS'],
+      id          : '067129b1f69f77abaa58154c549aca21',
+      proxy       : 'https://vercel.prohibitorum.top/github_access_token',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 
 <script>
