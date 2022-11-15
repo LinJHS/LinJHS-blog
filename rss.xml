@@ -9,7 +9,7 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Tue, 15 Nov 2022 14:13:21 GMT</pubDate>
+    <pubDate>Tue, 15 Nov 2022 14:22:48 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -18,13 +18,9 @@
       <guid>https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/</guid>
       <pubDate>Tue, 15 Nov 2022 10:59:40 GMT</pubDate>
       
-        
-        
-          
-          
-      <description></description>
-          
-        
+      <description>&lt;h1 id=&quot;关于程序内存的一些研究&quot;&gt;&lt;a href=&quot;#关于程序内存的一些研究&quot; class=&quot;headerlink&quot; title=&quot;关于程序内存的一些研究&quot;&gt;&lt;/a&gt;关于程序内存的一些研究&lt;/h1&gt;&lt;p&gt;本文归档于 &lt;a href=&quot;https://docs.linjhs.top/ctf/assemble/04/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。&lt;/p&gt;
+&lt;p&gt;内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。&lt;/p&gt;</description>
       
       
       
@@ -49,13 +45,8 @@
       <guid>https://linjhs.top/2022/11/14/My-First-Blog/</guid>
       <pubDate>Mon, 14 Nov 2022 00:31:05 GMT</pubDate>
       
-        
-        
-          
-          
-      <description></description>
-          
-        
+      <description>&lt;p&gt;终于建好了这个博客网站了，太不容易啦。&lt;/p&gt;
+&lt;p&gt;如果对内容或者其他方面有疑问，可以通过邮箱联系我：&lt;a href=&quot;mailto:599684893@qq.com&quot;&gt;599684893@qq.com&lt;/a&gt;&lt;/p&gt;</description>
       
       
       
