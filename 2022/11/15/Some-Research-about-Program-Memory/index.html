@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="关于程序内存的一些研究本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。">
+  <meta name="description" content="关于程序内存的一些研究 本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Some Research about Program Memory">
 <meta property="og:url" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/index.html">
 <meta property="og:site_name" content="LinJHS&#39;s Blog">
-<meta property="og:description" content="关于程序内存的一些研究本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。">
+<meta property="og:description" content="关于程序内存的一些研究 本文归档于 这里 最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。 内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/kernelUserMemorySplit.png">
 <meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/virtualMemoryInProcessSwitch.png">
@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/1-out.png">
 <meta property="og:image" content="https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/2-out.png">
 <meta property="article:published_time" content="2022-11-15T10:59:40.000Z">
-<meta property="article:modified_time" content="2022-11-15T14:22:48.779Z">
+<meta property="article:modified_time" content="2022-11-16T02:04:34.889Z">
 <meta property="article:author" content="LinJHS">
 <meta property="article:tag" content="C 语言">
 <meta property="article:tag" content="C++">
@@ -96,7 +96,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/rss.xml" title="LinJHS's Blog" type="application/rss+xml">
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/rss.xml" title="LinJHS's Blog" type="application/rss+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -208,10 +212,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-11-15 18:59:40 / 修改时间：22:22:48" itemprop="dateCreated datePublished" datetime="2022-11-15T18:59:40+08:00">2022-11-15</time>
+              <time title="创建时间：2022-11-15 18:59:40" itemprop="dateCreated datePublished" datetime="2022-11-15T18:59:40+08:00">2022-11-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-16 10:04:34" itemprop="dateModified" datetime="2022-11-16T10:04:34+08:00">2022-11-16</time>
+              </span>
 
           
             <span id="/2022/11/15/Some-Research-about-Program-Memory/" class="post-meta-item leancloud_visitors" data-flag-title="Some Research about Program Memory" title="阅读次数">
@@ -245,42 +255,49 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="关于程序内存的一些研究"><a href="#关于程序内存的一些研究" class="headerlink" title="关于程序内存的一些研究"></a>关于程序内存的一些研究</h1><p>本文归档于 <a target="_blank" rel="noopener" href="https://docs.linjhs.top/ctf/assemble/04/">这里</a></p>
+        <h1 id="关于程序内存的一些研究"><a class="markdownIt-Anchor" href="#关于程序内存的一些研究"></a> 关于程序内存的一些研究</h1>
+<p>本文归档于 <a target="_blank" rel="noopener" href="https://docs.linjhs.top/ctf/assemble/04/">这里</a></p>
 <p>最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。</p>
 <p>内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。</p>
 <span id="more"></span>
-
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>多任务操作系统中的每个进程都在其自己的内存沙箱中运行。此沙箱是一块<strong>虚拟地址空间</strong>，在 32 位模式下始终是 4GB 内存地址块，而在 64 位模式下，虚拟地址空间的理论大小为 $2^{64}$ 字节。</p>
+<h2 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h2>
+<p>多任务操作系统中的每个进程都在其自己的内存沙箱中运行。此沙箱是一块<strong>虚拟地址空间</strong>，在 32 位模式下始终是 4GB 内存地址块，而在 64 位模式下，虚拟地址空间的理论大小为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>64</mn></msup></mrow><annotation encoding="application/x-tex">2^{64}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">6</span><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> 字节。</p>
 <p>这些<strong>虚拟地址</strong>通过<strong>页表</strong>（page tables）映射到<strong>物理内存</strong>，页表由操作系统内核维护并由处理器查询。每个进程都有自己的一组页表，但必须为内核保留一部分虚拟地址空间：</p>
 <p>在 <strong>Windows</strong> 情况下，默认将高地址的 <strong>2GB</strong> 空间分配给内核（当然也可以分配 1GB），而在 <strong>Linux</strong> 情况下，默认将高地址的 <strong>1GB</strong> 空间分配给内核，内核空间以外剩下的空间给用户使用也被称为用户空间。</p>
-<p><img src="/2022/11/15/Some-Research-about-Program-Memory/kernelUserMemorySplit.png" alt="Kernel User Memory Split - From [2]"></p>
+<p><img src="kernelUserMemorySplit.png" alt="Kernel User Memory Split - From [2]" /></p>
 <p>这并不意味着内核需要使用那么多物理内存，只是它可以支配这么多物理内存。内核空间在页表中被标记为特权代码（privileged code）（R2 及以下）的专有空间，因此，如果用户层的程序尝试访问它，则会触发页错误（page fault）。在 Linux 中，内核空间始终存在，并在所有进程中映射相同的物理内存。内核代码和数据始终是可寻址的，随时准备处理中断或系统调用。相比之下，每当发生进程切换时，地址空间的用户模式部分的映射都会更改：</p>
-<p><img src="/2022/11/15/Some-Research-about-Program-Memory/virtualMemoryInProcessSwitch.png" alt="Virtual Memory in Process Switch - From [2]"></p>
+<p><img src="virtualMemoryInProcessSwitch.png" alt="Virtual Memory in Process Switch - From [2]" /></p>
 <p>蓝色区域表示映射到物理内存的虚拟地址，而白色区域表示未映射。在上面的例子中，Firefox 由于其对于内存的需求更大而使用了更多的虚拟地址空间。地址空间中的不同条带对应于堆、堆栈等内存段。以下是 Linux 进程中的标准段布局：</p>
-<p><img src="/2022/11/15/Some-Research-about-Program-Memory/linuxFlexibleAddressSpaceLayout.png" alt="Linux Flexible Address Space Layout - From [2]"></p>
+<p><img src="linuxFlexibleAddressSpaceLayout.png" alt="Linux Flexible Address Space Layout - From [2]" /></p>
 <p>如果计算机的每个进程精确地按照上面显示的段起始地址运行时，远程利用安全漏洞将变得非常容易，因此随机排布的地址空间逐渐变得流行起来。Linux 通过向堆栈、内存映射段和堆的起始地址添加偏移量使得地址空间变得随机。</p>
-<h3 id="栈-Stack"><a href="#栈-Stack" class="headerlink" title="栈 Stack"></a>栈 Stack</h3><p>进程地址空间中最顶层的段是<strong>堆栈</strong>，大多数编程语言都使用它来<strong>存储局部变量和函数参数</strong>。调用一个方法（method）或函数（function）会将新的<strong>栈帧</strong>（stack frame）推送到堆栈上。当函数返回时，栈帧将被销毁。之所以这种简单的设计能够实现，是因为数据遵循严格的<strong>后进先出</strong>顺序，这意味着不需要复杂的数据结构来跟踪堆栈内容——一个简单的指向堆栈顶部的指针就可以了。因此，入栈（push）和出栈（pop）是非常快速和精确的。此外，堆栈区域的不断重用往往会将活动堆栈内存保留在 CPU 缓存中，从而加快访问速度。进程中的<strong>每个线程</strong>都有自己的堆栈。</p>
+<h3 id="栈-stack"><a class="markdownIt-Anchor" href="#栈-stack"></a> 栈 Stack</h3>
+<p>进程地址空间中最顶层的段是<strong>堆栈</strong>，大多数编程语言都使用它来<strong>存储局部变量和函数参数</strong>。调用一个方法（method）或函数（function）会将新的<strong>栈帧</strong>（stack frame）推送到堆栈上。当函数返回时，栈帧将被销毁。之所以这种简单的设计能够实现，是因为数据遵循严格的<strong>后进先出</strong>顺序，这意味着不需要复杂的数据结构来跟踪堆栈内容——一个简单的指向堆栈顶部的指针就可以了。因此，入栈（push）和出栈（pop）是非常快速和精确的。此外，堆栈区域的不断重用往往会将活动堆栈内存保留在 CPU 缓存中，从而加快访问速度。进程中的<strong>每个线程</strong>都有自己的堆栈。</p>
 <p>通过不断地向堆栈中压入数据使其超过其容纳能力，可能会耗尽堆栈所对应的内存区域。这会触发一个<strong>页错误</strong>（page fault），并且由 Linux 中的 <code>expand_stack()</code> 进行处理，而 <code>expand_stack()</code> 又会调用 <code>acct_stack_growth()</code> 来检查是否适合扩展堆栈。如果堆栈大小低于 <code>RLIMIT_STACK</code> （通常为 8 MB），那么通常堆栈会增长，程序继续运行。但是，如果已达到最大堆栈大小，则会出现<strong>堆栈溢出</strong>，并且程序会收到<strong>段错误</strong>（Segmentation Fault）。虽然映射的堆栈区域会扩展以满足需求，但当堆栈变小时，映射的区域并不会缩小。</p>
 <p>动态栈增长是访问未映射内存区域（如上文图中白色区域所示）可能唯一一种有效的情况。对未映射内存的任何其他访问都会触发由于<strong>段错误</strong>导致的<strong>页错误</strong>。除此之外，某些映射区域是只读的，因此对这些区域的写入尝试也会导致<strong>段错误</strong>。</p>
-<h3 id="内存映射段-Memory-Mapping-Segment"><a href="#内存映射段-Memory-Mapping-Segment" class="headerlink" title="内存映射段 Memory Mapping Segment"></a>内存映射段 Memory Mapping Segment</h3><p>在堆栈下方，是<strong>内存映射段</strong>。在这里，内核将文件的内容直接映射到内存。内存映射是一种方便高效的文件 I&#x2F;O 方式，因此可以将它用于加载动态库。也可以创建与不任何文件对应的匿名内存映射，用于程序数据。在 Linux 中，如果通过 malloc() 请求大块内存，C 运行库将创建这样的匿名映射，<strong>而不是使用堆内存</strong>。“大块”表示大于 <code>MMAP_THRESHOLD</code> 字节，默认为 128 kB，可通过 <code>mallopt()</code> 进行调整。</p>
-<h3 id="堆-Heap"><a href="#堆-Heap" class="headerlink" title="堆 Heap"></a>堆 Heap</h3><p>接下来是堆。和栈一样，堆提供运行时内存分配。堆用于存储那些生存期与函数调用无关的数据。大部分语言都提供了堆管理功能。在C语言中，堆分配的接口是 <code>malloc()</code> 系列函数，而在具有垃圾收集功能的语言（如 C#）中，此接口是 <code>new</code> 关键字。</p>
+<h3 id="内存映射段-memory-mapping-segment"><a class="markdownIt-Anchor" href="#内存映射段-memory-mapping-segment"></a> 内存映射段 Memory Mapping Segment</h3>
+<p>在堆栈下方，是<strong>内存映射段</strong>。在这里，内核将文件的内容直接映射到内存。内存映射是一种方便高效的文件 I/O 方式，因此可以将它用于加载动态库。也可以创建与不任何文件对应的匿名内存映射，用于程序数据。在 Linux 中，如果通过 malloc() 请求大块内存，C 运行库将创建这样的匿名映射，<strong>而不是使用堆内存</strong>。“大块”表示大于 <code>MMAP_THRESHOLD</code> 字节，默认为 128 kB，可通过 <code>mallopt()</code> 进行调整。</p>
+<h3 id="堆-heap"><a class="markdownIt-Anchor" href="#堆-heap"></a> 堆 Heap</h3>
+<p>接下来是堆。和栈一样，堆提供运行时内存分配。堆用于存储那些生存期与函数调用无关的数据。大部分语言都提供了堆管理功能。在C语言中，堆分配的接口是 <code>malloc()</code> 系列函数，而在具有垃圾收集功能的语言（如 C#）中，此接口是 <code>new</code> 关键字。</p>
 <p>如果堆中有足够的空间来满足内存请求，则可以由语言在运行时处理该请求，而无需内核参与。否则，将会通过 <code>brk()</code> 系统调用（实现）扩大堆，为请求的内存块腾出空间。堆管理很复杂，需要复杂的算法来努力提高速度和高效的内存使用，以应对程序混乱的分配模式。为堆请求提供服务所需的时间可能会有很大差异。实时系统具有专用分配器来处理此问题。</p>
 <p>堆也可能变得碎片化，如下所示：</p>
-<p><img src="/2022/11/15/Some-Research-about-Program-Memory/fragmentedHeap.png" alt="Fragmented Heap - From [2]"></p>
-<h3 id="BSS-段-BSS-Segment"><a href="#BSS-段-BSS-Segment" class="headerlink" title="BSS 段 BSS Segment"></a>BSS 段 BSS Segment</h3><p>最后，我们进入内存的最底部的内存段：BSS 段、数据段和代码段。</p>
+<p><img src="fragmentedHeap.png" alt="Fragmented Heap - From [2]" /></p>
+<h3 id="bss-段-bss-segment"><a class="markdownIt-Anchor" href="#bss-段-bss-segment"></a> BSS 段 BSS Segment</h3>
+<p>最后，我们进入内存的最底部的内存段：BSS 段、数据段和代码段。</p>
 <p>在 C 语言中，BSS（Block Started by Symbol）段存储<strong>未初始化的静态（全局）变量的内容</strong>，其值不是由程序员在源代码中设置的。BSS 内存区域是匿名的：它不映射到任何文件。</p>
-<h3 id="数据段-Data-Segment"><a href="#数据段-Data-Segment" class="headerlink" title="数据段 Data Segment"></a>数据段 Data Segment</h3><p>数据段保存源代码中<strong>已初始化的静态（全局）变量的内容</strong>。此内存区域<strong>不是匿名的</strong>。它映射程序二进制映像的一部分，其中包含源代码中给出的初始静态值。尽管数据段映射了一个文件，但它是<strong>私有内存映射</strong>（private memory mapping），这意味着对内存的更新不会影响被映射的文件。</p>
-<h3 id="代码段-Text-Segment（ELF）"><a href="#代码段-Text-Segment（ELF）" class="headerlink" title="代码段 Text Segment（ELF）"></a>代码段 Text Segment（ELF）</h3><p>代码段是只读的，保存了你全部的代码外加零零碎碎的东西，比如字符串值。代码段将你的二进制文件也映射到了内存中，但对此区域的写操作都会使你的程序收到<strong>段错误</strong>。这有助于防范指针错误，虽然不像在编程时就注意防范来得那么有效。</p>
-<h2 id="关于-BSS-段和数据段"><a href="#关于-BSS-段和数据段" class="headerlink" title="关于 BSS 段和数据段"></a>关于 BSS 段和数据段</h2><p>以下有两段代码</p>
+<h3 id="数据段-data-segment"><a class="markdownIt-Anchor" href="#数据段-data-segment"></a> 数据段 Data Segment</h3>
+<p>数据段保存源代码中<strong>已初始化的静态（全局）变量的内容</strong>。此内存区域<strong>不是匿名的</strong>。它映射程序二进制映像的一部分，其中包含源代码中给出的初始静态值。尽管数据段映射了一个文件，但它是<strong>私有内存映射</strong>（private memory mapping），这意味着对内存的更新不会影响被映射的文件。</p>
+<h3 id="代码段-text-segmentelf"><a class="markdownIt-Anchor" href="#代码段-text-segmentelf"></a> 代码段 Text Segment（ELF）</h3>
+<p>代码段是只读的，保存了你全部的代码外加零零碎碎的东西，比如字符串值。代码段将你的二进制文件也映射到了内存中，但对此区域的写操作都会使你的程序收到<strong>段错误</strong>。这有助于防范指针错误，虽然不像在编程时就注意防范来得那么有效。</p>
+<h2 id="关于-bss-段和数据段"><a class="markdownIt-Anchor" href="#关于-bss-段和数据段"></a> 关于 BSS 段和数据段</h2>
+<p>以下有两段代码</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.c</span></span><br><span class="line"><span class="type">int</span> <span class="built_in">array</span>[<span class="number">100000</span>];</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//your code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//2.c</span></span><br><span class="line"><span class="type">int</span> <span class="built_in">array</span>[<span class="number">100000</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//your code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>进行编译后，我们发现：</p>
-<p><img src="/2022/11/15/Some-Research-about-Program-Memory/1-out.png" alt="1.c outputfile"><br><img src="/2022/11/15/Some-Research-about-Program-Memory/2-out.png" alt="2.c outputfile"></p>
+<p><img src="1-out.png" alt="1.c outputfile" />
+<img src="2-out.png" alt="2.c outputfile" /></p>
 <p>第一段代码编译出来的可执行文件比第二段的<strong>小得多</strong>。</p>
 <p>这是因为第一段代码全局变量没有初始化，保存在了 BSS 段，不需要占用可执行文件空间，因为其内容是由操作系统在程序运行时进行初始化；而第二段代码的全局变量的内容保存在了数据段，因此两段代码编译出的可执行文件大小不一样。</p>
-<hr>
+<hr />
 <p>参考资料：</p>
 <ol>
 <li>剖析程序的内存布局 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/98560503">https://zhuanlan.zhihu.com/p/98560503</a></li>
@@ -402,7 +419,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E7%9A%84%E4%B8%80%E4%BA%9B%E7%A0%94%E7%A9%B6"><span class="nav-number">1.</span> <span class="nav-text">关于程序内存的一些研究</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88-Stack"><span class="nav-number">1.1.1.</span> <span class="nav-text">栈 Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%AE%B5-Memory-Mapping-Segment"><span class="nav-number">1.1.2.</span> <span class="nav-text">内存映射段 Memory Mapping Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86-Heap"><span class="nav-number">1.1.3.</span> <span class="nav-text">堆 Heap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BSS-%E6%AE%B5-BSS-Segment"><span class="nav-number">1.1.4.</span> <span class="nav-text">BSS 段 BSS Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%AE%B5-Data-Segment"><span class="nav-number">1.1.5.</span> <span class="nav-text">数据段 Data Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5-Text-Segment%EF%BC%88ELF%EF%BC%89"><span class="nav-number">1.1.6.</span> <span class="nav-text">代码段 Text Segment（ELF）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E-BSS-%E6%AE%B5%E5%92%8C%E6%95%B0%E6%8D%AE%E6%AE%B5"><span class="nav-number">1.2.</span> <span class="nav-text">关于 BSS 段和数据段</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E7%9A%84%E4%B8%80%E4%BA%9B%E7%A0%94%E7%A9%B6"><span class="nav-number">1.</span> <span class="nav-text"> 关于程序内存的一些研究</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text"> 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88-stack"><span class="nav-number">1.1.1.</span> <span class="nav-text"> 栈 Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%AE%B5-memory-mapping-segment"><span class="nav-number">1.1.2.</span> <span class="nav-text"> 内存映射段 Memory Mapping Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86-heap"><span class="nav-number">1.1.3.</span> <span class="nav-text"> 堆 Heap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bss-%E6%AE%B5-bss-segment"><span class="nav-number">1.1.4.</span> <span class="nav-text"> BSS 段 BSS Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%AE%B5-data-segment"><span class="nav-number">1.1.5.</span> <span class="nav-text"> 数据段 Data Segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5-text-segmentelf"><span class="nav-number">1.1.6.</span> <span class="nav-text"> 代码段 Text Segment（ELF）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E-bss-%E6%AE%B5%E5%92%8C%E6%95%B0%E6%8D%AE%E6%AE%B5"><span class="nav-number">1.2.</span> <span class="nav-text"> 关于 BSS 段和数据段</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -9,7 +9,7 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Tue, 15 Nov 2022 14:22:48 GMT</pubDate>
+    <pubDate>Wed, 16 Nov 2022 02:04:34 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -18,7 +18,8 @@
       <guid>https://linjhs.top/2022/11/15/Some-Research-about-Program-Memory/</guid>
       <pubDate>Tue, 15 Nov 2022 10:59:40 GMT</pubDate>
       
-      <description>&lt;h1 id=&quot;关于程序内存的一些研究&quot;&gt;&lt;a href=&quot;#关于程序内存的一些研究&quot; class=&quot;headerlink&quot; title=&quot;关于程序内存的一些研究&quot;&gt;&lt;/a&gt;关于程序内存的一些研究&lt;/h1&gt;&lt;p&gt;本文归档于 &lt;a href=&quot;https://docs.linjhs.top/ctf/assemble/04/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+      <description>&lt;h1 id=&quot;关于程序内存的一些研究&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#关于程序内存的一些研究&quot;&gt;&lt;/a&gt; 关于程序内存的一些研究&lt;/h1&gt;
+&lt;p&gt;本文归档于 &lt;a href=&quot;https://docs.linjhs.top/ctf/assemble/04/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最近计导课准备教关于指针的相关内容，但我对于程序在内存中的数据存储仍有些疑问，于是我进行了下面的研究。&lt;/p&gt;
 &lt;p&gt;内存管理是操作系统的核心，本文将从 Windows 和 Linux 系统下的程序在内存中的布局方式展开。&lt;/p&gt;</description>
       
