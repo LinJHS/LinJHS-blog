@@ -9,8 +9,55 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Wed, 16 Nov 2022 02:04:34 GMT</pubDate>
+    <pubDate>Wed, 16 Nov 2022 13:01:32 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Prime Number Verdict</title>
+      <link>https://linjhs.top/2022/11/16/Prime-Number-Verdict/</link>
+      <guid>https://linjhs.top/2022/11/16/Prime-Number-Verdict/</guid>
+      <pubDate>Wed, 16 Nov 2022 12:52:33 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;素数的判定&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#素数的判定&quot;&gt;&lt;/a&gt; 素数的判定&lt;/h1&gt;
+&lt;p&gt;这个是挺早之前的了，发现没有更新到&lt;a href=&quot;https://docs.linjhs.top/&quot;&gt;文档&lt;/a&gt;里，那就浅浅水一篇（&lt;s&gt;主要是群友都在 push&lt;/s&gt;）（&lt;s&gt;我的笔记还可以水超级多篇&lt;/s&gt;）。归档到&lt;a href=&quot;https://docs.linjhs.top/acm/05_NumberTheory/prime/&quot;&gt;这里&lt;/a&gt;，方便以后拿板子。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/C/">C++</category>
+      
+      
+      <comments>https://linjhs.top/2022/11/16/Prime-Number-Verdict/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Some Differences Between C and C++</title>
+      <link>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/</link>
+      <guid>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/</guid>
+      <pubDate>Wed, 16 Nov 2022 02:12:42 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description></description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/C-%E8%AF%AD%E8%A8%80/">C 语言</category>
+      
+      <category domain="https://linjhs.top/tags/C/">C++</category>
+      
+      
+      <comments>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Some Research about Program Memory</title>
