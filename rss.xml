@@ -9,7 +9,7 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Sun, 20 Nov 2022 11:57:43 GMT</pubDate>
+    <pubDate>Sun, 20 Nov 2022 12:00:24 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -19,7 +19,8 @@
       <pubDate>Sat, 19 Nov 2022 13:08:56 GMT</pubDate>
       
       <description>&lt;h1 id=&quot;pe-结构简述&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#pe-结构简述&quot;&gt;&lt;/a&gt; PE 结构简述&lt;/h1&gt;
-&lt;p&gt;浅浅研究了一下 PE 的结构。&lt;/p&gt;</description>
+&lt;p&gt;浅浅研究了一下 PE 的结构。&lt;/p&gt;
+&lt;p&gt;本文归档在&lt;a href=&quot;https://docs.linjhs.top/ctf/re/05/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;</description>
       
       
       
