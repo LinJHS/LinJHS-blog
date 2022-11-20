@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="浅浅记录一下第一次手动脱壳的经历 如果写的有错误，大佬们可以帮帮忙指正以下 ~ 谢谢 Thanks♪(･ω･)ﾉ  前言 动调前一定要关闭杀毒软件！ 我不知道为什么我开着杀毒软件一直弄不好，关掉杀软就一次成功 （我比较懒就不配图了）  内容 首先用 Exeinfo PE 查看壳的类型，判断需要手动脱壳。 接着用 StudyPE+ 禁用 ASLR 来固定 PE 基质方便接下来的操作。 然后在 db">
+  <meta name="description" content="浅浅记录一下第一次手动脱壳的经历 如果写的有错误，大佬们可以帮帮忙指正以下 ~ 谢谢 Thanks♪(･ω･)ﾉ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="My First Manual Dump">
 <meta property="og:url" content="https://linjhs.top/2022/11/19/My-First-Manual-Dump/index.html">
 <meta property="og:site_name" content="LinJHS&#39;s Blog">
-<meta property="og:description" content="浅浅记录一下第一次手动脱壳的经历 如果写的有错误，大佬们可以帮帮忙指正以下 ~ 谢谢 Thanks♪(･ω･)ﾉ  前言 动调前一定要关闭杀毒软件！ 我不知道为什么我开着杀毒软件一直弄不好，关掉杀软就一次成功 （我比较懒就不配图了）  内容 首先用 Exeinfo PE 查看壳的类型，判断需要手动脱壳。 接着用 StudyPE+ 禁用 ASLR 来固定 PE 基质方便接下来的操作。 然后在 db">
+<meta property="og:description" content="浅浅记录一下第一次手动脱壳的经历 如果写的有错误，大佬们可以帮帮忙指正以下 ~ 谢谢 Thanks♪(･ω･)ﾉ">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-19T11:28:08.000Z">
-<meta property="article:modified_time" content="2022-11-19T12:06:36.498Z">
+<meta property="article:modified_time" content="2022-11-19T13:11:31.892Z">
 <meta property="article:author" content="LinJHS">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="Reverse">
@@ -205,7 +205,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-19 19:28:08 / 修改时间：20:06:36" itemprop="dateCreated datePublished" datetime="2022-11-19T19:28:08+08:00">2022-11-19</time>
+              <time title="创建时间：2022-11-19 19:28:08 / 修改时间：21:11:31" itemprop="dateCreated datePublished" datetime="2022-11-19T19:28:08+08:00">2022-11-19</time>
             </span>
 
           
@@ -242,6 +242,7 @@
       
         <h1 id="浅浅记录一下第一次手动脱壳的经历"><a class="markdownIt-Anchor" href="#浅浅记录一下第一次手动脱壳的经历"></a> 浅浅记录一下第一次手动脱壳的经历</h1>
 <p>如果写的有错误，大佬们可以帮帮忙指正以下 ~ 谢谢 Thanks♪(･ω･)ﾉ</p>
+<span id="more"></span>
 <h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
 <p>动调前<strong>一定要关闭杀毒软件</strong>！</p>
 <p>我不知道为什么我开着杀毒软件一直弄不好，关掉杀软就一次成功</p>
@@ -304,7 +305,10 @@
     <a href="/2022/11/16/Prime-Number-Verdict/" rel="prev" title="Prime Number Verdict">
       <i class="fa fa-chevron-left"></i> Prime Number Verdict
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/19/PE-Format/" rel="next" title="PE Format">
+      PE Format <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -391,7 +395,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
