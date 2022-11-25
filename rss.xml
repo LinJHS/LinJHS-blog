@@ -9,8 +9,31 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Sun, 20 Nov 2022 12:00:24 GMT</pubDate>
+    <pubDate>Fri, 25 Nov 2022 08:52:50 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>An Easy Crack</title>
+      <link>https://linjhs.top/2022/11/25/An-Easy-Crack/</link>
+      <guid>https://linjhs.top/2022/11/25/An-Easy-Crack/</guid>
+      <pubDate>Fri, 25 Nov 2022 08:02:57 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;记一次简单的破解&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#记一次简单的破解&quot;&gt;&lt;/a&gt; 记一次简单的破解&lt;/h1&gt;
+&lt;p&gt;同学写了一个程序用来算矩阵的行简化阶梯形，但是其中一个模式需要密码。&lt;/p&gt;
+&lt;p&gt;下面记录一下破解方法。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      
+      <comments>https://linjhs.top/2022/11/25/An-Easy-Crack/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>PE Format</title>
@@ -76,33 +99,6 @@
       
       
       <comments>https://linjhs.top/2022/11/16/Prime-Number-Verdict/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>Some Differences Between C and C++</title>
-      <link>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/</link>
-      <guid>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/</guid>
-      <pubDate>Wed, 16 Nov 2022 02:12:42 GMT</pubDate>
-      
-        
-        
-          
-          
-      <description></description>
-          
-        
-      
-      
-      
-      
-      
-      <category domain="https://linjhs.top/tags/C-%E8%AF%AD%E8%A8%80/">C 语言</category>
-      
-      <category domain="https://linjhs.top/tags/C/">C++</category>
-      
-      
-      <comments>https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/#disqus_thread</comments>
       
     </item>
     

@@ -20,21 +20,24 @@
     var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="C 语言和 C++ 的一些区别  01 C++ 更强调语言的实用性，所有的变量都可以在需要使用时再定义 C 语言中的变量必须在作用域开始的位置定义  02 C++ 不允许定义多个同名全局变量，否则编译会报错 C 语言允许重复定义多个同名全局变量，它们最终会被链接到全局数据区的同一个地址空间上  03 C++ 中所有的标识符都必须显式声明类型 C 语言具有默认类型 例：int f() 和 int">
+  <meta name="description" content="记一次简单的破解 同学写了一个程序用来算矩阵的行简化阶梯形，但是其中一个模式需要密码。 下面记录一下破解方法。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Some Differences Between C and C++">
-<meta property="og:url" content="https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/index.html">
+<meta property="og:title" content="An Easy Crack">
+<meta property="og:url" content="https://linjhs.top/2022/11/25/An-Easy-Crack/index.html">
 <meta property="og:site_name" content="LinJHS&#39;s Blog">
-<meta property="og:description" content="C 语言和 C++ 的一些区别  01 C++ 更强调语言的实用性，所有的变量都可以在需要使用时再定义 C 语言中的变量必须在作用域开始的位置定义  02 C++ 不允许定义多个同名全局变量，否则编译会报错 C 语言允许重复定义多个同名全局变量，它们最终会被链接到全局数据区的同一个地址空间上  03 C++ 中所有的标识符都必须显式声明类型 C 语言具有默认类型 例：int f() 和 int">
+<meta property="og:description" content="记一次简单的破解 同学写了一个程序用来算矩阵的行简化阶梯形，但是其中一个模式需要密码。 下面记录一下破解方法。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-11-16T02:12:42.000Z">
-<meta property="article:modified_time" content="2022-11-16T03:11:18.342Z">
+<meta property="og:image" content="https://linjhs.top/2022/11/25/An-Easy-Crack/pic1.png">
+<meta property="og:image" content="https://linjhs.top/2022/11/25/An-Easy-Crack/pic2.png">
+<meta property="article:published_time" content="2022-11-25T08:02:57.000Z">
+<meta property="article:modified_time" content="2022-11-25T08:52:50.518Z">
 <meta property="article:author" content="LinJHS">
-<meta property="article:tag" content="C 语言">
-<meta property="article:tag" content="C++">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://linjhs.top/2022/11/25/An-Easy-Crack/pic1.png">
 
-<link rel="canonical" href="https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/">
+<link rel="canonical" href="https://linjhs.top/2022/11/25/An-Easy-Crack/">
 
 
 <script id="page-configurations">
@@ -47,7 +50,7 @@
   };
 </script>
 
-  <title>Some Differences Between C and C++ | LinJHS's Blog</title>
+  <title>An Easy Crack | LinJHS's Blog</title>
   
 
 
@@ -181,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/">
+    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2022/11/25/An-Easy-Crack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -194,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Some Differences Between C and C++
+          An Easy Crack
         </h1>
 
         <div class="post-meta">
@@ -205,11 +208,11 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-11-16 10:12:42 / 修改时间：11:11:18" itemprop="dateCreated datePublished" datetime="2022-11-16T10:12:42+08:00">2022-11-16</time>
+              <time title="创建时间：2022-11-25 16:02:57 / 修改时间：16:52:50" itemprop="dateCreated datePublished" datetime="2022-11-25T16:02:57+08:00">2022-11-25</time>
             </span>
 
           
-            <span id="/2022/11/16/Some-Differences-Between-C-and-CPP/" class="post-meta-item leancloud_visitors" data-flag-title="Some Differences Between C and C++" title="阅读次数">
+            <span id="/2022/11/25/An-Easy-Crack/" class="post-meta-item leancloud_visitors" data-flag-title="An Easy Crack" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -224,8 +227,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/11/16/Some-Differences-Between-C-and-CPP/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/16/Some-Differences-Between-C-and-CPP/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/11/25/An-Easy-Crack/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/25/An-Easy-Crack/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -240,26 +243,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="c-语言和-c-的一些区别"><a class="markdownIt-Anchor" href="#c-语言和-c-的一些区别"></a> C 语言和 C++ 的一些区别</h1>
-<h2 id="01"><a class="markdownIt-Anchor" href="#01"></a> 01</h2>
-<p>C++ 更强调语言的实用性，所有的变量都可以在需要使用时再定义</p>
-<p>C 语言中的变量必须在作用域开始的位置定义</p>
-<h2 id="02"><a class="markdownIt-Anchor" href="#02"></a> 02</h2>
-<p>C++ 不允许定义多个同名全局变量，否则编译会报错</p>
-<p>C 语言允许重复定义多个同名全局变量，它们最终会被链接到全局数据区的同一个地址空间上</p>
-<h2 id="03"><a class="markdownIt-Anchor" href="#03"></a> 03</h2>
-<p>C++ 中所有的标识符都必须显式声明类型</p>
-<p>C 语言具有默认类型</p>
-<p>例：<code>int f()</code> 和 <code>int f(void)</code> 有区别吗？如果有，区别是什么？</p>
-<ul>
-<li>在 C++ 中，两者都表示返回值为 int 的无参函数</li>
-<li>在 C 语言中，前者表示返回值为 int ，接受任意个数、任意类型参数的函数，后者表示返回值为 int 的无参函数</li>
-</ul>
-<hr />
-<p>参考资料：</p>
-<ol>
-<li>C到C++的升级 <a target="_blank" rel="noopener" href="http://t.zoukankan.com/songhe364826110-p-11517145.html">http://t.zoukankan.com/songhe364826110-p-11517145.html</a></li>
-</ol>
+        <h1 id="记一次简单的破解"><a class="markdownIt-Anchor" href="#记一次简单的破解"></a> 记一次简单的破解</h1>
+<p>同学写了一个程序用来算矩阵的行简化阶梯形，但是其中一个模式需要密码。</p>
+<p>下面记录一下破解方法。</p>
+<span id="more"></span>
+<h2 id="破解过程"><a class="markdownIt-Anchor" href="#破解过程"></a> 破解过程</h2>
+<p>首先，这个程序有 UPX 壳。可以直接脱壳。</p>
+<p>脱壳后直接拖到 IDA 。</p>
+<p><img src="pic1.png" alt="IDA - 1" /></p>
+<p>解决方法很简单：</p>
+<p>找到下面这个跳转指令</p>
+<p><img src="pic2.png" alt="IDA - 2" /></p>
+<p>替换成 <code>jmp</code></p>
+<p>直接解决（不需要去看那个离谱的 <code>check</code> 函数）</p>
+<p>嘿嘿 <code>(*^▽^*)</code></p>
+<p><em>据开发者说这个是非预期解</em></p>
 
     </div>
 
@@ -275,7 +273,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/" title="Some Differences Between C and C++">https://linjhs.top/2022/11/16/Some-Differences-Between-C-and-CPP/</a>
+    <a href="https://linjhs.top/2022/11/25/An-Easy-Crack/" title="An Easy Crack">https://linjhs.top/2022/11/25/An-Easy-Crack/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -286,8 +284,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/C-%E8%AF%AD%E8%A8%80/" rel="tag"># C 语言</a>
-              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/Reverse/" rel="tag"># Reverse</a>
           </div>
 
         
@@ -296,13 +294,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/11/15/Some-Research-about-Program-Memory/" rel="prev" title="Some Research about Program Memory">
-      <i class="fa fa-chevron-left"></i> Some Research about Program Memory
+    <a href="/2022/11/19/PE-Format/" rel="prev" title="PE Format">
+      <i class="fa fa-chevron-left"></i> PE Format
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/11/16/Prime-Number-Verdict/" rel="next" title="Prime Number Verdict">
-      Prime Number Verdict <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -375,7 +370,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#c-%E8%AF%AD%E8%A8%80%E5%92%8C-c-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text"> C 语言和 C++ 的一些区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#01"><span class="nav-number">1.1.</span> <span class="nav-text"> 01</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#02"><span class="nav-number">1.2.</span> <span class="nav-text"> 02</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#03"><span class="nav-number">1.3.</span> <span class="nav-text"> 03</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%AE%80%E5%8D%95%E7%9A%84%E7%A0%B4%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text"> 记一次简单的破解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A0%B4%E8%A7%A3%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text"> 破解过程</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -504,7 +499,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'LinJHS-Hexo-Comment',
       owner       : 'LinJHS',
       admin       : ['LinJHS'],
-      id          : 'b8dd3959bc17f43a9d0444eda747516a',
+      id          : '3ee9939364d7f21b476872d2c7fb5f4e',
       proxy       : 'https://vercel.prohibitorum.top/github_access_token',
         language: 'zh-CN',
       distractionFreeMode: true
