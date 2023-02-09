@@ -9,8 +9,30 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Wed, 07 Dec 2022 02:46:41 GMT</pubDate>
+    <pubDate>Thu, 09 Feb 2023 03:00:14 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Setting the Default DPI Awareness for a Process</title>
+      <link>https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/</link>
+      <guid>https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/</guid>
+      <pubDate>Thu, 09 Feb 2023 01:36:20 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;为进程设置默认-dpi-感知&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#为进程设置默认-dpi-感知&quot;&gt;&lt;/a&gt; 为进程设置默认 DPI 感知&lt;/h1&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;最近写程序的时候需要获取屏幕分辨率创建窗口，却发现创建的窗口贼奇怪。&lt;/p&gt;
+&lt;p&gt;昨晚翻资料的时候无意间找到了解决方案，遂记录如下。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/C/">C++</category>
+      
+      
+      <comments>https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>C Struct Definition</title>

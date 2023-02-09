@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="为进程设置默认 DPI 感知  前言 最近写程序的时候需要获取屏幕分辨率创建窗口，却发现创建的窗口贼奇怪。 昨晚翻资料的时候无意间找到了解决方案，遂记录如下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Setting the Default DPI Awareness for a Process">
+<meta property="og:url" content="https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/index.html">
+<meta property="og:site_name" content="LinJHS&#39;s Blog">
+<meta property="og:description" content="为进程设置默认 DPI 感知  前言 最近写程序的时候需要获取屏幕分辨率创建窗口，却发现创建的窗口贼奇怪。 昨晚翻资料的时候无意间找到了解决方案，遂记录如下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-09T01:36:20.000Z">
+<meta property="article:modified_time" content="2023-02-09T03:00:14.717Z">
+<meta property="article:author" content="LinJHS">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Setting the Default DPI Awareness for a Process | LinJHS's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?11b963ee84ebb5c20c246493f697e975";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/rss.xml" title="LinJHS's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LinJHS's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-docs">
+
+    <a href="https://docs.linjhs.top/" rel="noopener" target="_blank"><i class="fa fa-file fa-fw"></i>文档</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LinJHS">
+      <meta itemprop="description" content="This is LinJHS's blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LinJHS's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Setting the Default DPI Awareness for a Process
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-02-09 09:36:20 / 修改时间：11:00:14" itemprop="dateCreated datePublished" datetime="2023-02-09T09:36:20+08:00">2023-02-09</time>
+            </span>
+
+          
+            <span id="/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/" class="post-meta-item leancloud_visitors" data-flag-title="Setting the Default DPI Awareness for a Process" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="为进程设置默认-dpi-感知"><a class="markdownIt-Anchor" href="#为进程设置默认-dpi-感知"></a> 为进程设置默认 DPI 感知</h1>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>最近写程序的时候需要获取屏幕分辨率创建窗口，却发现创建的窗口贼奇怪。</p>
+<p>昨晚翻资料的时候无意间找到了解决方案，遂记录如下。</p>
+<span id="more"></span>
+<h2 id="概要"><a class="markdownIt-Anchor" href="#概要"></a> 概要</h2>
+<p>使用较旧 Windows 编程技术的桌面应用程序（原始 Win32 编程、Windows 窗体、Windows Presentation Framework (WPF) 等）在没有其他开发人员工作的情况下，无法自动处理 DPI 缩放。如果没有此类工作，许多常见使用方案中，应用程序看起来模糊或大小不正确。</p>
+<h2 id="显示比例因子-dpi"><a class="markdownIt-Anchor" href="#显示比例因子-dpi"></a> 显示比例因子 &amp; DPI</h2>
+<p>随着显示技术的发展，显示面板制造商已经将越来越多的像素打包到面板上的每个物理空间单元中。这导致现代显示面板的点数比历史上高得多。过去，大多数显示器每线性英寸物理空间有 96 像素，即 96 DPI（Dots Per Inch，每英寸点数）；在 2017 年，具有近 300 DPI 或更高版本的显示器随时可用。</p>
+<p>大多数旧式桌面 UI 框架都有内置的假设，即在过程的生存期内，显示 DPI 不会更改。此假设不再适用，显示 DPIs 通常会在整个应用程序进程的生存期内多次更改。显示比例因子（DPI）更改的一些常见方案如下：</p>
+<ul>
+<li>多监视器设置，其中每个显示器具有不同的比例系数，应用程序将从一个显示器移动到另一个（例如 4K 和 1080p 显示器）</li>
+<li>使用低 DPI 外部显示器对接和取消锁定高 DPI 笔记本电脑（反之亦然）</li>
+<li>通过远程桌面从高 DPI 笔记本电脑/平板电脑连接到低 DPI 设备（反之亦然）</li>
+<li>在应用程序运行时，使显示缩放因子设置发生更改</li>
+</ul>
+<p>在这些方案中，UWP 应用程序会自动为新的 DPI 重新绘制。然而在默认情况、没有其他开发人员工作下，桌面应用程序<strong>不会</strong>自动为新的 DPI 重新绘制。没有执行额外工作以响应 DPI 更改的桌面应用程序可能会向用户显示<strong>模糊</strong>或<strong>大小错误</strong>。</p>
+<p>在没有为应用程序设置 DPI 感知时，Windows 不知道应用程序呈现为固定 DPI 值 96 (100%) 。每当这些应用程序在显示比例大于 96 DPI 的屏幕上运行时，Windows 会将应用程序位图拉伸到预期的物理大小。这会导致应用程序显得<strong>模糊不清</strong>。</p>
+<h2 id="dpi-感知模式"><a class="markdownIt-Anchor" href="#dpi-感知模式"></a> DPI 感知模式</h2>
+<p>下表显示了应用程序在不同方案中的呈现方式：</p>
+<table>
+<thead>
+<tr>
+<th>DPI 感知模式</th>
+<th>引入的 Windows 版本</th>
+<th>应用程序的 DPI 视图</th>
+<th>DPI 更改行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无法感知</td>
+<td>不适用</td>
+<td>所有显示器均为 96 DPI</td>
+<td>位图拉伸 (模糊)</td>
+</tr>
+<tr>
+<td>系统</td>
+<td>Vista</td>
+<td>在启动当前用户会话时，所有显示器的 DPI (主显示器的 DPI)</td>
+<td>位图拉伸 (模糊)</td>
+</tr>
+<tr>
+<td>Per-Monitor</td>
+<td>8.1</td>
+<td>应用程序窗口主要位于的显示器的 DPI</td>
+<td>顶级 HWND 收到 DPI 更改通知<br>没有任何 UI 元素的 DPI 缩放。</td>
+</tr>
+<tr>
+<td>Per-Monitor V2</td>
+<td>Windows 10 创意者更新 (1703)</td>
+<td>应用程序窗口主要位于的显示器的 DPI</td>
+<td>顶级 和 子 HWND 会收到 DPI 更改通知<br>自动 DPI 缩放：<br>1. 非工作区<br>2. 常见控件中的主题绘制位图 (comctl32 V6) <br>3. Dialogs (CreateDialog)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="解决方案"><a class="markdownIt-Anchor" href="#解决方案"></a> 解决方案</h2>
+<h3 id="01-使用应用程序清单设置默认感知推荐"><a class="markdownIt-Anchor" href="#01-使用应用程序清单设置默认感知推荐"></a> 01 使用应用程序清单设置默认感知（推荐）</h3>
+<p>有两个清单设置可用于指定进程默认 DPI 感知模式： <code>&lt;dpiAwareness&gt;</code> 和 <code>&lt;dpiAware&gt;</code>。</p>
+<p><code>&lt;dpiAware&gt;</code> 在 Windows Vista 中引入，仅允许将进程默认设置设置为系统感知。</p>
+<p><code>&lt;dpiAwareness&gt;</code> 是在 Windows 10 版本 1607 中引入的，可用于指定进程默认 DPI 感知模式的有序列表。这样，便可以设置备份 DPI 感知模式，使应用程序在不支持指定的第一个感知模式的 Windows 版本上运行。在较旧版本的 Windows 上，将忽略较新的 <code>&lt;dpiAwareness&gt;</code> 标记。这意味着，可以使用这两个清单设置来启用一种方案，在较旧版本的 Windows 默认为系统感知，在大于 Windows 10 版本 1607 使用 Per-Monitor 。在 Windows 10 版本 1607 以上，如果 <code>&lt;dpiAwareness&gt;</code> 元素存在，则忽略 <code>&lt;dpiAware&gt;</code> 设置。</p>
+<table>
+<thead>
+<tr>
+<th>Process default DPI awareness mode</th>
+<th><code>&lt;dpiAware&gt;</code> setting</th>
+<th><code>&lt;dpiAwareness&gt;</code> setting (Windows 10, version 1607 and later)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>unaware</td>
+<td>N/A (no dpiAware setting in manifest)<br>or<br><code>&lt;dpiAware&gt;false&lt;/dpiAware&gt;</code></td>
+<td><code>&lt;dpiAwareness&gt;unaware&lt;/dpiAwareness&gt;</code></td>
+</tr>
+<tr>
+<td>System aware</td>
+<td><code>&lt;dpiAware&gt;true&lt;/dpiAware&gt;</code></td>
+<td><code>&lt;dpiAwareness&gt;system&lt;/dpiAwareness&gt;</code></td>
+</tr>
+<tr>
+<td>Per Monitor</td>
+<td><code>&lt;dpiAware&gt;true/pm&lt;dpiAware&gt;</code></td>
+<td><code>&lt;dpiAwareness&gt;PerMonitor&lt;/dpiAwareness&gt;</code></td>
+</tr>
+<tr>
+<td>Per Monitor V2</td>
+<td>Not supported</td>
+<td><code>&lt;dpiAwareness&gt;PerMonitorV2&lt;/dpiAwareness&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>下面的示例显示了在同一清单文件中使用 <code>&lt;dpiAware&gt;</code> 和 <code>&lt;dpiAware&gt;</code> 设置，以便为不同版本的 Windows 配置进程默认 DPI 感知行为。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> standalone=<span class="string">&quot;yes&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">assembly</span> <span class="attr">xmlns</span>=<span class="string">&quot;urn:schemas-microsoft-com:asm.v1&quot;</span> <span class="attr">manifestVersion</span>=<span class="string">&quot;1.0&quot;</span> <span class="attr">xmlns:asmv3</span>=<span class="string">&quot;urn:schemas-microsoft-com:asm.v3&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">asmv3:application</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">asmv3:windowsSettings</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dpiAware</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/SMI/2005/WindowsSettings&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">dpiAware</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dpiAwareness</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/SMI/2016/WindowsSettings&quot;</span>&gt;</span>PerMonitorV2<span class="tag">&lt;/<span class="name">dpiAwareness</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">asmv3:windowsSettings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">asmv3:application</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">assembly</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="02-以编程方式设置默认感知"><a class="markdownIt-Anchor" href="#02-以编程方式设置默认感知"></a> 02 以编程方式设置默认感知</h3>
+<p>尽管<strong>不建议这样做</strong>，但可以通过编程方式设置默认 DPI 感知。在进程中创建 HWND 窗口后，不再支持更改 DPI 感知模式。如果要以编程方式设置进程默认 DPI 感知模式，则必须在创建任何 HWND 之前调用相应的 API 。</p>
+<p>API：</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>最低版本的Windows</th>
+<th>DPI Unaware</th>
+<th>系统 DPI 感知</th>
+<th>每个监视器 DPI 感知</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetProcessDPIAware</code></td>
+<td>Windows Vista</td>
+<td>不适用</td>
+<td><code>SetProcessDPIAware()</code></td>
+<td>不可用</td>
+</tr>
+<tr>
+<td><code>SetProcessDpiAwareness</code></td>
+<td>Windows 8.1</td>
+<td><code>SetProcessDpiAwareness(PROCESS_DPI_UNAWARE)</code></td>
+<td><code>SetProcessDpiAwareness(PROCESS_SYSTEM_DPI_AWARE)</code></td>
+<td><code>SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)</code></td>
+</tr>
+<tr>
+<td><code>SetProcessDpiAwarenessContext</code></td>
+<td>Windows 10 版本 1607</td>
+<td><code>SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE)</code></td>
+<td><code>SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE)</code></td>
+<td><code>SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE)</code><br><code>SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)</code></td>
+</tr>
+</tbody>
+</table>
+<p>下面以 <code>SetProcessDPIAware</code> 为例介绍使用方法。</p>
+<p>在 Visual Studio 等大部分软件都支持直接使用上述函数，但仍有部分软件内置的编译器不支持上述函数，因此，便需要手动引入 <code>User32.dll</code> 文件以提供支持。示例代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//为进程设置默认 DPI 感知 </span></span><br><span class="line">HINSTANCE hUser32 = <span class="built_in">LoadLibrary</span>(<span class="string">&quot;User32.dll&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (hUser32)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="keyword">typedef</span> <span class="title">BOOL</span> <span class="params">(WINAPI* LPSetProcessDPIAware)</span><span class="params">(<span class="type">void</span>)</span></span>;</span><br><span class="line">	LPSetProcessDPIAware SetProcessDPIAware = (LPSetProcessDPIAware)<span class="built_in">GetProcAddress</span>(hUser32, <span class="string">&quot;SetProcessDPIAware&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (SetProcessDPIAware)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">SetProcessDPIAware</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">FreeLibrary</span>(hUser32);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<p>参考资料：</p>
+<ol>
+<li>为进程设置默认 DPI 感知 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process">https://learn.microsoft.com/en-us/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process</a></li>
+<li>Windows上的高 DPI 桌面应用程序开发 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows">https://learn.microsoft.com/zh-cn/windows/win32/hidpi/high-dpi-desktop-application-development-on-windows</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>LinJHS
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/" title="Setting the Default DPI Awareness for a Process">https://linjhs.top/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/12/07/C-Struct-Definition/" rel="prev" title="C Struct Definition">
+      <i class="fa fa-chevron-left"></i> C Struct Definition
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E8%BF%9B%E7%A8%8B%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4-dpi-%E6%84%9F%E7%9F%A5"><span class="nav-number">1.</span> <span class="nav-text"> 为进程设置默认 DPI 感知</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">1.2.</span> <span class="nav-text"> 概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%AF%94%E4%BE%8B%E5%9B%A0%E5%AD%90-dpi"><span class="nav-number">1.3.</span> <span class="nav-text"> 显示比例因子 &amp; DPI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dpi-%E6%84%9F%E7%9F%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text"> DPI 感知模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.5.</span> <span class="nav-text"> 解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#01-%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%B8%85%E5%8D%95%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E6%84%9F%E7%9F%A5%E6%8E%A8%E8%8D%90"><span class="nav-number">1.5.1.</span> <span class="nav-text"> 01 使用应用程序清单设置默认感知（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#02-%E4%BB%A5%E7%BC%96%E7%A8%8B%E6%96%B9%E5%BC%8F%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E6%84%9F%E7%9F%A5"><span class="nav-number">1.5.2.</span> <span class="nav-text"> 02 以编程方式设置默认感知</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LinJHS</p>
+  <div class="site-description" itemprop="description">This is LinJHS's blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LinJHS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LinJHS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/rss.xml" title="RSS → &#x2F;rss.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LinJHS</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '405711ae5b392ea52f22',
+      clientSecret: '5581aa0eecaeda7c799784d594209e5e6a061d99',
+      repo        : 'LinJHS-Hexo-Comment',
+      owner       : 'LinJHS',
+      admin       : ['LinJHS'],
+      id          : '7f32bf8baf4487a1f5337823707135b6',
+      proxy       : 'https://vercel.prohibitorum.top/github_access_token',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xA7vHfV5hTiT3MD9peshOsKG-gzGzoHsz',
+      appKey     : 'B4WKMjiMvcwVyxsVtZW9IMKO',
+      placeholder: "本评论系统将会在您发表评论时记录您的 IP ，并且会不定时删除违规评论，感谢您的配合。",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
