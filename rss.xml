@@ -57,6 +57,30 @@
     </item>
     
     <item>
+      <title>Pyc-Format</title>
+      <link>https://linjhs.top/2023/01/19/Pyc-Format/</link>
+      <guid>https://linjhs.top/2023/01/19/Pyc-Format/</guid>
+      <pubDate>Thu, 19 Jan 2023 06:35:53 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;pyc-结构简述&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#pyc-结构简述&quot;&gt;&lt;/a&gt; Pyc 结构简述&lt;/h1&gt;
+&lt;p&gt;浅浅研究了一下 &lt;code&gt;.pyc&lt;/code&gt; 的文件结构。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      <category domain="https://linjhs.top/tags/Python/">Python</category>
+      
+      
+      <comments>https://linjhs.top/2023/01/19/Pyc-Format/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
       <title>C Struct Definition</title>
       <link>https://linjhs.top/2022/12/07/C-Struct-Definition/</link>
       <guid>https://linjhs.top/2022/12/07/C-Struct-Definition/</guid>

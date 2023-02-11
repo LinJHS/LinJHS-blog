@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"linjhs.top","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2},"valine":{"order":-1}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Pyc 结构简述 浅浅研究了一下 .pyc 的文件结构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pyc-Format">
+<meta property="og:url" content="https://linjhs.top/2023/01/19/Pyc-Format/index.html">
+<meta property="og:site_name" content="LinJHS&#39;s Blog">
+<meta property="og:description" content="Pyc 结构简述 浅浅研究了一下 .pyc 的文件结构。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-19T06:35:53.000Z">
+<meta property="article:modified_time" content="2023-02-11T10:28:52.387Z">
+<meta property="article:author" content="LinJHS">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Reverse">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://linjhs.top/2023/01/19/Pyc-Format/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Pyc-Format | LinJHS's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?11b963ee84ebb5c20c246493f697e975";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/rss.xml" title="LinJHS's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LinJHS's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-docs">
+
+    <a href="https://docs.linjhs.top/" rel="noopener" target="_blank"><i class="fa fa-file fa-fw"></i>文档</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2023/01/19/Pyc-Format/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LinJHS">
+      <meta itemprop="description" content="This is LinJHS's blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LinJHS's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pyc-Format
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-19 14:35:53" itemprop="dateCreated datePublished" datetime="2023-01-19T14:35:53+08:00">2023-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-11 18:28:52" itemprop="dateModified" datetime="2023-02-11T18:28:52+08:00">2023-02-11</time>
+              </span>
+
+          
+            <span id="/2023/01/19/Pyc-Format/" class="post-meta-item leancloud_visitors" data-flag-title="Pyc-Format" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/19/Pyc-Format/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/19/Pyc-Format/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="pyc-结构简述"><a class="markdownIt-Anchor" href="#pyc-结构简述"></a> Pyc 结构简述</h1>
+<p>浅浅研究了一下 <code>.pyc</code> 的文件结构。</p>
+<span id="more"></span>
+<h2 id="pyc-简介"><a class="markdownIt-Anchor" href="#pyc-简介"></a> Pyc 简介</h2>
+<p><code>.pyc</code> 是 Python 字节码文件，可以由 Python 虚拟机来执行。</p>
+<p>在 Python 3 中，Python 会自动在 <code>__pycache__</code> 目录里，缓存每个模块编译后的版本，名称为 <code>module.version.pyc</code> ，这就是 Python 字节码文件。其中 version 一般使用 Python 版本号。</p>
+<p>字节码在 Python 虚拟机程序里对应的是 <code>PyCodeObject</code> 对象。<code>.pyc</code> 文件是字节码在磁盘上的表现形式。</p>
+<p><code>PyCodeObject</code> 对象的创建时机是模块加载的时候，即 <code>import</code>。</p>
+<p>如果使用 <code>python test.py</code> 命令会对 <a target="_blank" rel="noopener" href="http://test.py">test.py</a> 进行编译成字节码并解释执行，但是不会生成 test.pyc 。</p>
+<p>如果 <code>test.py</code> 加载了其他模块，如 <code>import util</code> ，Python 会对 <code>util.py</code> 进行编译成字节码，生成 <code>util.pyc</code> ，然后对字节码解释执行。</p>
+<p>如果想生成 <code>test.pyc</code> ，我们可以使用Python内置模块py_compile来编译。</p>
+<p>加载模块时，如果同时存在 <code>.py</code> 和 <code>.pyc</code> ，Python 会尝试使用 <code>.pyc</code> ；如果 <code>.pyc</code> 的编译时间早于 <code>.py</code> 的修改时间，则重新编译 <code>.py</code> 并更新 <code>.pyc</code> 。</p>
+<h2 id="pyc-结构概述"><a class="markdownIt-Anchor" href="#pyc-结构概述"></a> Pyc 结构概述</h2>
+<p>Python 的原始代码在运行前都会被先编译成字节码（二进制），并把编译的结果保存到：</p>
+<ul>
+<li>一个四字节 <code>magic number</code></li>
+<li>一个四字节的时间戳</li>
+<li>一个 <code>PyCodeObject</code></li>
+</ul>
+<p>把这三部分在内存中以 marshal 格式保存为文件，即 pyc 文件。</p>
+<h3 id="01-magic-number"><a class="markdownIt-Anchor" href="#01-magic-number"></a> 01 magic number</h3>
+<p>iPlayForSG 大佬博客里整理了下面的 Magic Number 对照表。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">Known values:</span><br><span class="line">#  Python 1.5:   20121</span><br><span class="line">#  Python 1.5.1: 20121</span><br><span class="line">#     Python 1.5.2: 20121</span><br><span class="line">#     Python 1.6:   50428</span><br><span class="line">#     Python 2.0:   50823</span><br><span class="line">#     Python 2.0.1: 50823</span><br><span class="line">#     Python 2.1:   60202</span><br><span class="line">#     Python 2.1.1: 60202</span><br><span class="line">#     Python 2.1.2: 60202</span><br><span class="line">#     Python 2.2:   60717</span><br><span class="line">#     Python 2.3a0: 62011</span><br><span class="line">#     Python 2.3a0: 62021</span><br><span class="line">#     Python 2.3a0: 62011 (!)</span><br><span class="line">#     Python 2.4a0: 62041</span><br><span class="line">#     Python 2.4a3: 62051</span><br><span class="line">#     Python 2.4b1: 62061</span><br><span class="line">#     Python 2.5a0: 62071</span><br><span class="line">#     Python 2.5a0: 62081 (ast-branch)</span><br><span class="line">#     Python 2.5a0: 62091 (with)</span><br><span class="line">#     Python 2.5a0: 62092 (changed WITH_CLEANUP opcode)</span><br><span class="line">#     Python 2.5b3: 62101 (fix wrong code: for x, in ...)</span><br><span class="line">#     Python 2.5b3: 62111 (fix wrong code: x += yield)</span><br><span class="line">#     Python 2.5c1: 62121 (fix wrong lnotab with for loops and</span><br><span class="line">#                          storing constants that should have been removed)</span><br><span class="line">#     Python 2.5c2: 62131 (fix wrong code: for x, in ... in listcomp/genexp)</span><br><span class="line">#     Python 2.6a0: 62151 (peephole optimizations and STORE_MAP opcode)</span><br><span class="line">#     Python 2.6a1: 62161 (WITH_CLEANUP optimization)</span><br><span class="line">#     Python 2.7a0: 62171 (optimize list comprehensions/change LIST_APPEND)</span><br><span class="line">#     Python 2.7a0: 62181 (optimize conditional branches:</span><br><span class="line">#                          introduce POP_JUMP_IF_FALSE and POP_JUMP_IF_TRUE)</span><br><span class="line">#     Python 2.7a0  62191 (introduce SETUP_WITH)</span><br><span class="line">#     Python 2.7a0  62201 (introduce BUILD_SET)</span><br><span class="line">#     Python 2.7a0  62211 (introduce MAP_ADD and SET_ADD)</span><br><span class="line">#     Python 3000:   3000</span><br><span class="line">#                    3010 (removed UNARY_CONVERT)</span><br><span class="line">#                    3020 (added BUILD_SET)</span><br><span class="line">#                    3030 (added keyword-only parameters)</span><br><span class="line">#                    3040 (added signature annotations)</span><br><span class="line">#                    3050 (print becomes a function)</span><br><span class="line">#                    3060 (PEP 3115 metaclass syntax)</span><br><span class="line">#                    3061 (string literals become unicode)</span><br><span class="line">#                    3071 (PEP 3109 raise changes)</span><br><span class="line">#                    3081 (PEP 3137 make __file__ and __name__ unicode)</span><br><span class="line">#                    3091 (kill str8 interning)</span><br><span class="line">#                    3101 (merge from 2.6a0, see 62151)</span><br><span class="line">#                    3103 (__file__ points to source file)</span><br><span class="line">#     Python 3.0a4: 3111 (WITH_CLEANUP optimization).</span><br><span class="line">#     Python 3.0b1: 3131 (lexical exception stacking, including POP_EXCEPT</span><br><span class="line">                          #3021)</span><br><span class="line">#     Python 3.1a1: 3141 (optimize list, set and dict comprehensions:</span><br><span class="line">#                         change LIST_APPEND and SET_ADD, add MAP_ADD #2183)</span><br><span class="line">#     Python 3.1a1: 3151 (optimize conditional branches:</span><br><span class="line">#                         introduce POP_JUMP_IF_FALSE and POP_JUMP_IF_TRUE</span><br><span class="line">                          #4715)</span><br><span class="line">#     Python 3.2a1: 3160 (add SETUP_WITH #6101)</span><br><span class="line">#                   tag: cpython-32</span><br><span class="line">#     Python 3.2a2: 3170 (add DUP_TOP_TWO, remove DUP_TOPX and ROT_FOUR #9225)</span><br><span class="line">#                   tag: cpython-32</span><br><span class="line">#     Python 3.2a3  3180 (add DELETE_DEREF #4617)</span><br><span class="line">#     Python 3.3a1  3190 (__class__ super closure changed)</span><br><span class="line">#     Python 3.3a1  3200 (PEP 3155 __qualname__ added #13448)</span><br><span class="line">#     Python 3.3a1  3210 (added size modulo 2**32 to the pyc header #13645)</span><br><span class="line">#     Python 3.3a2  3220 (changed PEP 380 implementation #14230)</span><br><span class="line">#     Python 3.3a4  3230 (revert changes to implicit __class__ closure #14857)</span><br><span class="line">#     Python 3.4a1  3250 (evaluate positional default arguments before</span><br><span class="line">#                        keyword-only defaults #16967)</span><br><span class="line">#     Python 3.4a1  3260 (add LOAD_CLASSDEREF; allow locals of class to override</span><br><span class="line">#                        free vars #17853)</span><br><span class="line">#     Python 3.4a1  3270 (various tweaks to the __class__ closure #12370)</span><br><span class="line">#     Python 3.4a1  3280 (remove implicit class argument)</span><br><span class="line">#     Python 3.4a4  3290 (changes to __qualname__ computation #19301)</span><br><span class="line">#     Python 3.4a4  3300 (more changes to __qualname__ computation #19301)</span><br><span class="line">#     Python 3.4rc2 3310 (alter __qualname__ computation #20625)</span><br><span class="line">#     Python 3.5a1  3320 (PEP 465: Matrix multiplication operator #21176)</span><br><span class="line">#     Python 3.5b1  3330 (PEP 448: Additional Unpacking Generalizations #2292)</span><br><span class="line">#     Python 3.5b2  3340 (fix dictionary display evaluation order #11205)</span><br><span class="line">#     Python 3.5b3  3350 (add GET_YIELD_FROM_ITER opcode #24400)</span><br><span class="line">#     Python 3.5.2  3351 (fix BUILD_MAP_UNPACK_WITH_CALL opcode #27286)</span><br><span class="line">#     Python 3.6a0  3360 (add FORMAT_VALUE opcode #25483)</span><br><span class="line">#     Python 3.6a1  3361 (lineno delta of code.co_lnotab becomes signed #26107)</span><br><span class="line">#     Python 3.6a2  3370 (16 bit wordcode #26647)</span><br><span class="line">#     Python 3.6a2  3371 (add BUILD_CONST_KEY_MAP opcode #27140)</span><br><span class="line">#     Python 3.6a2  3372 (MAKE_FUNCTION simplification, remove MAKE_CLOSURE</span><br><span class="line">#                         #27095)</span><br><span class="line">#     Python 3.6b1  3373 (add BUILD_STRING opcode #27078)</span><br><span class="line">#     Python 3.6b1  3375 (add SETUP_ANNOTATIONS and STORE_ANNOTATION opcodes</span><br><span class="line">#                         #27985)</span><br><span class="line">#     Python 3.6b1  3376 (simplify CALL_FUNCTIONs &amp; BUILD_MAP_UNPACK_WITH_CALL</span><br><span class="line">                          #27213)</span><br><span class="line">#     Python 3.6b1  3377 (set __class__ cell from type.__new__ #23722)</span><br><span class="line">#     Python 3.6b2  3378 (add BUILD_TUPLE_UNPACK_WITH_CALL #28257)</span><br><span class="line">#     Python 3.6rc1 3379 (more thorough __class__ validation #23722)</span><br><span class="line">#     Python 3.7a1  3390 (add LOAD_METHOD and CALL_METHOD opcodes #26110)</span><br><span class="line">#     Python 3.7a2  3391 (update GET_AITER #31709)</span><br><span class="line">#     Python 3.7a4  3392 (PEP 552: Deterministic pycs #31650)</span><br><span class="line">#     Python 3.7b1  3393 (remove STORE_ANNOTATION opcode #32550)</span><br><span class="line">#     Python 3.7b5  3394 (restored docstring as the first stmt in the body;</span><br><span class="line">#                         this might affected the first line number #32911)</span><br><span class="line">#     Python 3.8a1  3400 (move frame block handling to compiler #17611)</span><br><span class="line">#     Python 3.8a1  3401 (add END_ASYNC_FOR #33041)</span><br><span class="line">#     Python 3.8a1  3410 (PEP570 Python Positional-Only Parameters #36540)</span><br><span class="line">#     Python 3.8b2  3411 (Reverse evaluation order of key: value in dict</span><br><span class="line">#                         comprehensions #35224)</span><br><span class="line">#     Python 3.8b2  3412 (Swap the position of positional args and positional</span><br><span class="line">#                         only args in ast.arguments #37593)</span><br><span class="line">#     Python 3.8b4  3413 (Fix &quot;break&quot; and &quot;continue&quot; in &quot;finally&quot; #37830)</span><br></pre></td></tr></table></figure>
+<h3 id="02-pycodeobject"><a class="markdownIt-Anchor" href="#02-pycodeobject"></a> 02 PyCodeObject</h3>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Bytecode object */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    PyObject_HEAD</span><br><span class="line">    <span class="type">int</span> co_argcount;        <span class="comment">/* #arguments, except *args 代码块的位置参数的个数 */</span></span><br><span class="line">    <span class="type">int</span> co_nlocals;         <span class="comment">/* #local variables 代码块中局部变量的个数，包括其位置参数的个数。 */</span></span><br><span class="line">    <span class="type">int</span> co_stacksize;       <span class="comment">/* #entries needed for evaluation stack 执行该代码块需要的栈空间。 */</span></span><br><span class="line">    <span class="type">int</span> co_flags;           <span class="comment">/*  用来表示参数中是否有 *args 或者 **kwargs */</span></span><br><span class="line">    PyObject *co_code;      <span class="comment">/* instruction opcodes 该段代码块所对应的 opcode 指令序列。 */</span></span><br><span class="line">    PyObject *co_consts;    <span class="comment">/* list (constants used) 保存代码块中所有的常量 */</span></span><br><span class="line">    PyObject *co_names;     <span class="comment">/* list of strings (names used) 保存代码块中所有的符号 */</span></span><br><span class="line">    PyObject *co_varnames;  <span class="comment">/* tuple of strings (local variable names) 代码块中所有局部变量名 */</span></span><br><span class="line">    PyObject *co_freevars;  <span class="comment">/* tuple of strings (free variable names) 闭包所需要的 */</span></span><br><span class="line">    PyObject *co_cellvars;  <span class="comment">/* tuple of strings (cell variable names) 闭包所需要的，内部嵌套函数所需要的局部变量集合 */</span></span><br><span class="line">    <span class="comment">/* The rest doesn&#x27;t count for hash/cmp */</span></span><br><span class="line">    PyObject *co_filename;  <span class="comment">/* string (where it was loaded from) */</span></span><br><span class="line">    PyObject *co_name;      <span class="comment">/* string (name, for reference) */</span></span><br><span class="line">    <span class="type">int</span> co_firstlineno;     <span class="comment">/* first source line number */</span></span><br><span class="line">    PyObject *co_lnotab;    <span class="comment">/* string (encoding addr&lt;-&gt;lineno mapping) See</span></span><br><span class="line"><span class="comment">                            Objects/lnotab_notes.txt for details. */</span></span><br><span class="line">    <span class="type">void</span> *co_zombieframe;   <span class="comment">/* for optimization only (see frameobject.c) */</span></span><br><span class="line">    PyObject *co_weakreflist;<span class="comment">/* to support weakrefs to code objects */</span></span><br><span class="line">&#125; PyCodeObject;</span><br></pre></td></tr></table></figure>
+<p>所有的 <code>PyCodeObject</code> 都是通过调用以下的函数得以运行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PyObject * <span class="title function_">PyEval_EvalFrameEx</span><span class="params">(PyFrameObject *f, <span class="type">int</span> throwflag)</span></span><br></pre></td></tr></table></figure>
+<p>这个函数是 Python 的一个重量级的函数，他的作用即是执行中间码，Python 的代码都是通过调用这个函数来运行的。</p>
+<p><code>PyFrameObject</code> 这个数据结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Frame object */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">frame</span> &#123;</span>  </span><br><span class="line">    PyObject_VAR_HEAD  </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">frame</span> *<span class="title">f_back</span>;</span>  <span class="comment">/* previous frame, or NULL */</span>  </span><br><span class="line">    PyCodeObject *f_code;   <span class="comment">/* 【重要】code segment */</span>  </span><br><span class="line">    PyObject *f_builtins;   <span class="comment">/* builtin symbol table (PyDictObject) */</span>  </span><br><span class="line">    PyObject *f_globals;    <span class="comment">/* 【重要】global symbol table (PyDictObject) */</span>  </span><br><span class="line">    PyObject *f_locals;     <span class="comment">/* 【重要】local symbol table (any mapping) */</span>  </span><br><span class="line">    PyObject **f_valuestack;    <span class="comment">/* points after the last local */</span>  </span><br><span class="line">    <span class="comment">/* Next free slot in f_valuestack.  Frame creation sets to f_valuestack.</span></span><br><span class="line"><span class="comment">       Frame evaluation usually NULLs it, but a frame that yields sets it</span></span><br><span class="line"><span class="comment">       to the current stack top. */</span>  </span><br><span class="line">    PyObject **f_stacktop;  <span class="comment">/* 【重要】 */</span></span><br><span class="line">    PyObject *f_trace;      <span class="comment">/* Trace function */</span>  </span><br><span class="line"></span><br><span class="line">    <span class="comment">/* If an exception is raised in this frame, the next three are used to</span></span><br><span class="line"><span class="comment">     * record the exception info (if any) originally in the thread state.  See</span></span><br><span class="line"><span class="comment">     * comments before set_exc_info() -- it&#x27;s not obvious.</span></span><br><span class="line"><span class="comment">     * Invariant:  if _type is NULL, then so are _value and _traceback.</span></span><br><span class="line"><span class="comment">     * Desired invariant:  all three are NULL, or all three are non-NULL.  That</span></span><br><span class="line"><span class="comment">     * one isn&#x27;t currently true, but &quot;should be&quot;.</span></span><br><span class="line"><span class="comment">     */</span>  </span><br><span class="line">    PyObject *f_exc_type, *f_exc_value, *f_exc_traceback;  </span><br><span class="line"></span><br><span class="line">    PyThreadState *f_tstate;  </span><br><span class="line">    <span class="type">int</span> f_lasti;        <span class="comment">/* Last instruction if called */</span>  </span><br><span class="line">    <span class="comment">/* Call PyFrame_GetLineNumber() instead of reading this field</span></span><br><span class="line"><span class="comment">       directly.  As of 2.3 f_lineno is only valid when tracing is</span></span><br><span class="line"><span class="comment">       active (i.e. when f_trace is set).  At other times we use</span></span><br><span class="line"><span class="comment">       PyCode_Addr2Line to calculate the line from the current</span></span><br><span class="line"><span class="comment">       bytecode index. */</span>  </span><br><span class="line">    <span class="type">int</span> f_lineno;       <span class="comment">/* Current line number */</span>  </span><br><span class="line">    <span class="type">int</span> f_iblock;       <span class="comment">/* index in f_blockstack */</span>  </span><br><span class="line">    PyTryBlock f_blockstack[CO_MAXBLOCKS]; <span class="comment">/* for try and loop blocks */</span>  </span><br><span class="line">    PyObject *f_localsplus[<span class="number">1</span>];  <span class="comment">/* locals+stack, dynamically sized */</span>  </span><br><span class="line">&#125; PyFrameObject;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr />
+<p>参考资料：</p>
+<ol>
+<li>Python 字节码 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/ningjing213/p/16224595.html">https://www.cnblogs.com/ningjing213/p/16224595.html</a></li>
+<li>Python 程序的执行原理 <a target="_blank" rel="noopener" href="http://tech.uc.cn/?p=1932%E3%80%81">http://tech.uc.cn/?p=1932、</a></li>
+<li>.pyc 文件的结构 <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45055269/article/details/105682945">https://blog.csdn.net/weixin_45055269/article/details/105682945</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>LinJHS
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://linjhs.top/2023/01/19/Pyc-Format/" title="Pyc-Format">https://linjhs.top/2023/01/19/Pyc-Format/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/Reverse/" rel="tag"># Reverse</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/12/07/C-Struct-Definition/" rel="prev" title="C Struct Definition">
+      <i class="fa fa-chevron-left"></i> C Struct Definition
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/28/Apk-Dynamic-Debug/" rel="next" title="APK Dynamic Debug">
+      APK Dynamic Debug <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-valine">valine</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments" id="gitalk-container"></div>
+            </div>
+            <div class="tab-pane valine" id="comment-valine">
+              <div class="comments" id="valine-comments"></div>
+            </div>
+        </div>
+      </div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pyc-%E7%BB%93%E6%9E%84%E7%AE%80%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text"> Pyc 结构简述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pyc-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text"> Pyc 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pyc-%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0"><span class="nav-number">1.2.</span> <span class="nav-text"> Pyc 结构概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#01-magic-number"><span class="nav-number">1.2.1.</span> <span class="nav-text"> 01 magic number</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#02-pycodeobject"><span class="nav-number">1.2.2.</span> <span class="nav-text"> 02 PyCodeObject</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LinJHS</p>
+  <div class="site-description" itemprop="description">This is LinJHS's blog</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LinJHS" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LinJHS" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/rss.xml" title="RSS → &#x2F;rss.xml"><i class="fa fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LinJHS</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '405711ae5b392ea52f22',
+      clientSecret: '5581aa0eecaeda7c799784d594209e5e6a061d99',
+      repo        : 'LinJHS-Hexo-Comment',
+      owner       : 'LinJHS',
+      admin       : ['LinJHS'],
+      id          : 'bf2761eaa752efe6eaf5fe17e2e535ba',
+      proxy       : 'https://vercel.prohibitorum.top/github_access_token',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'xA7vHfV5hTiT3MD9peshOsKG-gzGzoHsz',
+      appKey     : 'B4WKMjiMvcwVyxsVtZW9IMKO',
+      placeholder: "本评论系统将会在您发表评论时记录您的 IP ，并且会不定时删除违规评论，感谢您的配合。",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
