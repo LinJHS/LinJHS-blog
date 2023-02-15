@@ -483,27 +483,6 @@
 
   
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-<script>
-NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
-    var gitalk = new Gitalk({
-      clientID    : '405711ae5b392ea52f22',
-      clientSecret: '5581aa0eecaeda7c799784d594209e5e6a061d99',
-      repo        : 'LinJHS-Hexo-Comment',
-      owner       : 'LinJHS',
-      admin       : ['LinJHS'],
-      id          : '483c914e93099d070c1c084cce5d7d5d',
-      proxy       : 'https://vercel.prohibitorum.top/github_access_token',
-        language: 'zh-CN',
-      distractionFreeMode: true
-    });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
-});
-</script>
-
 
 <script>
 NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
@@ -530,6 +509,27 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
       serverURLs : ''
     });
   }, window.Valine);
+});
+</script>
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '405711ae5b392ea52f22',
+      clientSecret: '5581aa0eecaeda7c799784d594209e5e6a061d99',
+      repo        : 'LinJHS-Hexo-Comment',
+      owner       : 'LinJHS',
+      admin       : ['LinJHS'],
+      id          : '483c914e93099d070c1c084cce5d7d5d',
+      proxy       : 'https://vercel.prohibitorum.top/github_access_token',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
 });
 </script>
 

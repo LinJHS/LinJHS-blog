@@ -602,7 +602,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-15 11:28:38" itemprop="dateModified" datetime="2023-02-15T11:28:38+08:00">2023-02-15</time>
+                <time title="修改时间：2023-02-15 11:33:58" itemprop="dateModified" datetime="2023-02-15T11:33:58+08:00">2023-02-15</time>
               </span>
 
           
@@ -625,342 +625,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="elf-结构简述"><a class="markdownIt-Anchor" href="#elf-结构简述"></a> ELF 结构简述</h1>
-<p>浅浅研究了一下 ELF 的文件结构。</p>
+          <h1 id="ELF-结构简述"><a href="#ELF-结构简述" class="headerlink" title="ELF 结构简述"></a>ELF 结构简述</h1><p>浅浅研究了一下 ELF 的文件结构。</p>
 <p>本文归档在<a href="">这里</a>。</p>
-<h2 id="elf-简介"><a class="markdownIt-Anchor" href="#elf-简介"></a> ELF 简介</h2>
-<p>ELF（Executable and Linkable Format）是 UNIX 系统实验室（USL）作为应用程序二进制接口（Application Binary Interface，ABI）而开发和发布的，也是 Linux 的主要可执行文件格式。</p>
-<h2 id="elf-结构概述"><a class="markdownIt-Anchor" href="#elf-结构概述"></a> ELF 结构概述</h2>
-<p>ELF 文件由 4 部分组成，分别是 ELF 头（ELF header）、程序头表（Program header table）、节（Section）和节头表（Section header table）。实际上，一个文件中不一定包含全部内容，而且它们的位置也未必如同所示这样安排，只有 ELF 头的位置是固定的，其余各部分的位置、大小等信息由 ELF 头中的各项值来决定。</p>
-<h2 id="elf-头"><a class="markdownIt-Anchor" href="#elf-头"></a> ELF 头</h2>
-<p>下面以 32 位的 ELF 为例介绍。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> EI_NIDENT 16</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> e_ident[EI_NIDENT];</span><br><span class="line">    Elf32_Half e_type;</span><br><span class="line">    Elf32_Half e_machine;</span><br><span class="line">    Elf32_Word e_version;</span><br><span class="line">    Elf32_Addr e_entry;</span><br><span class="line">    Elf32_Off e_phoff;</span><br><span class="line">    Elf32_Off e_shoff;</span><br><span class="line">    Elf32_Word e_flags;</span><br><span class="line">    Elf32_Half e_ehsize;</span><br><span class="line">    Elf32_Half e_phentsize;</span><br><span class="line">    Elf32_Half e_phnum;</span><br><span class="line">    Elf32_Half e_shentsize;</span><br><span class="line">    Elf32_Half e_shnum;</span><br><span class="line">    Elf32_Half e_shstrndx;</span><br><span class="line">&#125; Elf32_Ehdr;</span><br></pre></td></tr></table></figure>
-<p>数据类型说明：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>大小</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Elf32_Addr</td>
-<td>4</td>
-<td>无符号程序地址</td>
-</tr>
-<tr>
-<td>Elf32_Half</td>
-<td>2</td>
-<td>无符号中等大小整数</td>
-</tr>
-<tr>
-<td>Elf32_Off</td>
-<td>4</td>
-<td>无符号文件偏移</td>
-</tr>
-<tr>
-<td>Elf32_Sword</td>
-<td>4</td>
-<td>有符号大整数</td>
-</tr>
-<tr>
-<td>Elf32_Word</td>
-<td>4</td>
-<td>无符号大整数</td>
-</tr>
-<tr>
-<td>unsigned char</td>
-<td>1</td>
-<td>无符号小整数</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>
-<p><code>e_ident</code>：最开头是 16 个字节的 e_ident ，其中包含用以表示 ELF 文件的字符，以及其他一些与机器无关的信息。</p>
- <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> EI_MAG0     0   <span class="comment">//File identification</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_MAG1     1   <span class="comment">//File identification</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_MAG2     2   <span class="comment">//File identification</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_MAG3     3   <span class="comment">//File identification</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_CLASS    4   <span class="comment">//File class</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_DATA     5   <span class="comment">//Data encoding</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_VERSION  6   <span class="comment">//File version</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_PAD      7   <span class="comment">//Start of padding bytes</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EI_NIDENT   16  <span class="comment">//Size of e_ident[]</span></span></span><br></pre></td></tr></table></figure>
-<p>开头的 4 个字节值固定不变，为 <code>0x7f</code> 和 <code>ELF</code> 三个字符。</p>
-<p><code>e_ident[EI_CLASS]</code> 指明文件类别：0（无效目标文件）；1（32 位目标文件）；2（64 位目标文件）。</p>
-<p><code>e_ident[EI_DATA]</code> 指明字节序，规定该文件是大端还是小端：0（无效编码格式）；1（小端）；2（大端）。</p>
-<p><code>e_ident[EI_VERSION]</code> 指明 ELF 文件头的版本。</p>
-<p>从 <code>e_ident[EI_PAD]</code> 到 <code>e_ident[EI_NIDENT-1]</code> 之间的 9 个字节保留。</p>
-</li>
-<li>
-<p><code>e_type</code>：文件类型。</p>
-<p>常见的：1（可重定位文件：“.o 文件”）；2（可执行文件）；3（共享库文件：“.so 文件”）。</p>
- <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ET_NONE     0       <span class="comment">//No file type</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_REL      1       <span class="comment">//Relocatable file</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_EXEC     2       <span class="comment">//Executable file</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_DYN      3       <span class="comment">//Shared object file</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_CORE     4       <span class="comment">//Core file</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_LOPROC   0xff00  <span class="comment">//Processor-specific</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ET_HIPROC   0xffff  <span class="comment">//Processor-specific</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li>
-<p><code>e_machine</code>：指定该程序在什么平台上使用。</p>
-</li>
-<li>
-<p><code>e_version</code>：ELF 文件版本号。</p>
-</li>
-<li>
-<p><code>e_entry</code>：程序的入口虚拟地址。对于可执行文件来说，当 ELF 文件加载完成后，将从这个地址开始执行。对于其它文件，该值为 0 。</p>
-</li>
-<li>
-<p><code>e_phoff</code> / <code>e_shoff</code>：分别指明 Program Header Table 和 Section Header Table 在文件中的字节偏移量，没有则为 0。</p>
-</li>
-<li>
-<p><code>e_flags</code>：处理器特定的标志位，通常不怎么关心。</p>
-</li>
-<li>
-<p><code>e_ehsize</code>：指明 ELF 文件头的字节大小（52 个字节）。</p>
-</li>
-<li>
-<p><code>e_phentsize</code> / <code>e_phnum</code>：<code>e_phentsize</code> 指明在 Program Header Table 中的每一项的字节大小，<code>e_phnum</code> 指明共有多少项。</p>
-</li>
-<li>
-<p><code>e_shentsize</code> / <code>e_shnum</code>：<code>e_shentsize</code> 指明在 Section Header Table 中的每一项的字节大小，<code>e_shnum</code> 指明共有多少项。</p>
-</li>
-<li>
-<p><code>e_shstrndx</code>：在 Section Header Table 中，存储“节名字表”的 Section（就是 .shstrtab 节）所对应的索引。</p>
-</li>
-</ol>
-<h2 id="程序头表"><a class="markdownIt-Anchor" href="#程序头表"></a> 程序头表</h2>
-<p>程序头表由多个程序头组成。</p>
-<p>下面以 32 位为例</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Program segment header.  */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  Elf32_Word	p_type;			<span class="comment">/* Segment type */</span></span><br><span class="line">  Elf32_Off	  p_offset;		<span class="comment">/* Segment file offset */</span></span><br><span class="line">  Elf32_Addr	p_vaddr;		<span class="comment">/* Segment virtual address */</span></span><br><span class="line">  Elf32_Addr	p_paddr;		<span class="comment">/* Segment physical address */</span></span><br><span class="line">  Elf32_Word	p_filesz;		<span class="comment">/* Segment size in file */</span></span><br><span class="line">  Elf32_Word	p_memsz;		<span class="comment">/* Segment size in memory */</span></span><br><span class="line">  Elf32_Word	p_flags;		<span class="comment">/* Segment flags */</span></span><br><span class="line">  Elf32_Word	p_align;		<span class="comment">/* Segment alignment */</span></span><br><span class="line">&#125; Elf32_Phdr;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>
-<p><code>p_type</code> 当前 Program header 所描述的段的类型。</p>
-<ul>
-<li><code>PT_NULL(0)</code>：当前项未使用，项中的成员是未定义的，需要忽略当前项；</li>
-<li><code>PT_LOAD(1)</code>：当前 Segment 是一个可装载的 Segment ，即可以被装载映射到内存中，其大小由 <code>p_filesz</code> 和 <code>p_memsz</code> 描述。如果 <code>p_memsz &gt; p_filesz</code> ，则剩余的字节被置零，但是 <code>p_filesz &gt; p_memsz</code> 是非法的。<strong>动态库</strong>一般包含两个该类型的段：<strong>代码段</strong>和<strong>数据段</strong>；</li>
-<li><code>PT_DYNAMIC(2)</code>：动态段，<strong>动态库特有</strong>的段，包含了动态链接必须的一些信息，比如需要链接的共享库列表、GOT 等等；</li>
-<li><code>PT_INTERP(3)</code>：当前段用于存储一段以 <code>NULL</code> 为结尾的字符串，该字符串表明了程序解释器的位置。且当前段仅仅对于<strong>可执行文件</strong>有实际意义，一个可执行文件中不能出现两个当前段，如果一个文件中包含当前段。比如 <code>/lib64/ld-linux-x86-64.so.2</code> ；</li>
-<li><code>PT_NOTE(4)</code>：用于保存与特定供应商或者系统相关的附加信息以便于兼容性、一致性检查，但是实际上只保存了操作系统的规范信息；</li>
-<li><code>PT_SHLIB(5)</code>：保留段；</li>
-<li><code>PT_PHDR(6)</code>：保存程序头表本身的位置和大小，当前段不能在文件中出现一次以上，且仅仅当程序表头为内存映像的一部分时起作用，它必须在所有加载项目之前；</li>
-<li><code>[PT_LPROC(0x70000000),PT_HIPROC(0x7fffffff)]</code>：该范围内的值用作预留；</li>
-</ul>
-</li>
-<li>
-<p><code>p_offset</code> 段的第一个字节在文件中的偏移。</p>
-</li>
-<li>
-<p><code>p_vaddr</code> 段的一个字节在内存中的虚拟地址</p>
-</li>
-<li>
-<p><code>p_paddr</code> 在物理内存定位相关的系统中，此项是为物理地址保留。</p>
-</li>
-<li>
-<p><code>p_filesz</code> 段在文件中的长度。</p>
-</li>
-<li>
-<p><code>p_memsz</code> 段在内存中的长度。</p>
-</li>
-<li>
-<p><code>p_flags</code> 与段相关的标志。</p>
-</li>
-<li>
-<p><code>p_align</code> 根据此项值来确定段在文件及内存中如何对齐。可加载的进程段的 <code>p_vaddr</code> 和 <code>p_offset</code> 取值必须合适，相对于对页面大小的取模而言；</p>
-<ul>
-<li>0 和 1 表示不需要对齐；</li>
-<li>其他值必须为 2 的幂次方，且必须满足 <code>p_addr|p_aligh == p_offset|a_align</code>。</li>
-</ul>
-</li>
-</ol>
-<h2 id="节头表"><a class="markdownIt-Anchor" href="#节头表"></a> 节头表</h2>
-<p>节头表描述了 ELF 文件中的节的基本信息。可执行文件不一定有节头表，但是一定有节，节头表可利用特殊的方式去除。</p>
-<p>段和节的区别是：</p>
-<ul>
-<li>段包含了程序装载可执行的基本信息，段告诉 OS 如何装载当前段到虚拟内存以及当前段的权限等和执行相关的信息，一个段可以包含 0 个或多个节；</li>
-<li>节包含了程序的代码和数据等内容，链接器会将多个节合并为一个段。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">elf32_shdr</span> &#123;</span></span><br><span class="line">  Elf32_Word  sh_name;		<span class="comment">/* Section name, index in string tbl */</span></span><br><span class="line">  Elf32_Word  sh_type;		<span class="comment">/* Type of section */</span></span><br><span class="line">  Elf32_Word  sh_flags;		<span class="comment">/* Miscellaneous section attributes */</span></span><br><span class="line">  Elf32_Addr  sh_addr;		<span class="comment">/* Section virtual addr at execution */</span></span><br><span class="line">  Elf32_Off	  sh_offset;		<span class="comment">/* Section file offset */</span></span><br><span class="line">  Elf32_Word  sh_size;		<span class="comment">/* Size of section in bytes */</span></span><br><span class="line">  Elf32_Word  sh_link;		<span class="comment">/* Index of another section */</span></span><br><span class="line">  Elf32_Word  sh_info;		<span class="comment">/* Additional section information */</span></span><br><span class="line">  Elf32_Word  sh_addralign;	<span class="comment">/* Section alignment */</span></span><br><span class="line">  Elf32_Word  sh_entsize;	<span class="comment">/* Entry size if section holds table */</span></span><br><span class="line">&#125; Elf32_Shdr;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>
-<p><code>sh_name</code>：值是节名称在字符串表中的索引；</p>
-</li>
-<li>
-<p><code>sh_type</code>：描述节的类型和语义；</p>
-<ul>
-<li>
-<p><code>SHT_NULL(0)</code>：当前节是非活跃的，没有一个对应的具体的节内存；</p>
-</li>
-<li>
-<p><code>SHT_PROGBITS(1)</code>：包含了程序的指令信息、数据等程序运行相关的信息；</p>
-</li>
-<li>
-<p><code>SHT_SYMTAB(2)</code>：保存了符号信息，用于重定位；</p>
-<p>此种类型节的sh_link存储相关字符串表的节索引，sh_info存储最后一个局部符号的符号表索引+1；</p>
-</li>
-<li>
-<p><code>SHT_DYNSYM(11)</code>：保存共享库导入动态符号信息；</p>
-<p>此种类型节的sh_link存储相关字符串表的节索引，sh_info存储最后一个局部符号的符号表索引+1；</p>
-</li>
-<li>
-<p><code>SHT_STRTAB(3)</code>：一个字符串表，保存了每个节的节名称；</p>
-</li>
-<li>
-<p><code>SHT_RELA(4)</code>：存储可重定位表项，可能会有附加内容，目标文件可能有多个可重定位表项；</p>
-<p>此种类型节的sh_link存储相关符号表的节索引，sh_info存储重定位所使用节的索引；</p>
-</li>
-<li>
-<p><code>SHT_HASH(5)</code>：存储符号哈希表，所有参与动态链接的目标只能包含一个哈希表，一个目标文件只能包含一个哈希表；</p>
-<p>此种类型节的sh_link存储哈希表所使用的符号表的节索引,sh_info为0；</p>
-</li>
-<li>
-<p><code>SHT_DYAMIC(6)</code>：存储包含动态链接的信息，一个目标文件只能包含一个；</p>
-<p>此种类型的节的sh_link存储当前节中使用到的字符串表格的节的索引，sh_info为0；</p>
-</li>
-<li>
-<p><code>SHT_NOTE(7)</code>：存储以某种形式标记文件的信息；</p>
-</li>
-<li>
-<p><code>SHT_NOBITS(8)</code>：这种类型的节不占据文件空间，但是成员sh_offset依然会包含对应的偏移；</p>
-</li>
-<li>
-<p><code>SHT_REL(9)</code>：包含可重定位表项，无附加内容，目标文件可能有多个可重定位表项；</p>
-<p>此种类型节的 <code>sh_link</code> 存储相关符号表的节索引，<code>sh_info</code> 存储重定位所使用节的索引；</p>
-</li>
-<li>
-<p><code>SHT_SHLIB(10)</code>：保留区，包含此节的程序与ABI不兼容；</p>
-</li>
-<li>
-<p><code>[SHT_LOPROC(0x70000000),SHT_HIPROC(0x7fffffff)]</code>：留给处理器专用语义；</p>
-</li>
-<li>
-<p><code>[SHT_LOUSER(0x80000000),SHT_HIUSER(0xffffffff)]</code>：预留；</p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>sh_flags</code>：1 bit 位的标志位；</p>
-<ul>
-<li><code>SHF_WRITE(0x1)</code>：当前节包含进程执行过程中可写的数据；</li>
-<li><code>SHF_ALLOC(0x2)</code>：当前节在运行阶段占据内存；</li>
-<li><code>SHF_EXECINSTR(0x4)</code>：当前节包含可执行的机器指令；</li>
-<li><code>SHF_MASKPROC(0xf0000000)</code>：所有包含当前掩码都表示预留给特定处理器的；</li>
-</ul>
-</li>
-<li>
-<p><code>sh_addr</code>：如果当前节需要被装载到内存，则当前项存储当前节映射到内存的首地址，否则应该为 0 ；</p>
-</li>
-<li>
-<p><code>sh_offset</code>：当前节的首地址相对于文件的偏移；</p>
-</li>
-<li>
-<p><code>sh_size</code>：节的大小。但是对于类型为 <code>SHT_NOBITS</code> 的节，当前值可能不为 0 但是在文件中不占据任何空间；</p>
-</li>
-<li>
-<p><code>sh_link</code>：存储节头表中的索引，表示当前节依赖于对应的节。对于特定的节有特定的含义，其他为 <code>SHN_UNDEF</code> ；</p>
-</li>
-<li>
-<p><code>sh_info</code>：节的附加信息。对于特定的节有特定的含义，其他为0；</p>
-</li>
-<li>
-<p><code>sh_addralign</code>：地址约束对齐，值应该为 0 或者 2 的幂次方，0和1表示未进行对齐；</p>
-</li>
-<li>
-<p><code>sh_entsize</code>：某些节是一个数组，对于这类节当前字段给出数组中每个项的字节数，比如符号表。如果节并不包含对应的数组，值应该为0。</p>
-</li>
-</ol>
-<h3 id="一些特殊的节"><a class="markdownIt-Anchor" href="#一些特殊的节"></a> 一些特殊的节</h3>
-<p>ELF 文件中有一些预定义的节来保存程序、数据和一些控制信息，这些节被用来链接或者装载程序。每个操作系统都支持一组链接模式，主要分为两类（也就是常说的动态库和静态库）：</p>
-<ul>
-<li>Static：静态绑定的一组目标文件、系统库和库档案（比如静态库），解析包含的符号引用并创建一个完全自包含的可执行文件；</li>
-<li>Dynamic：一组目标文件、库、系统共享资源和其他共享库链接在一起创建可执行文件。当加载此可执行文件时必须使系统中其他共享资源和动态库可用，程序才能正常运行。</li>
-</ul>
-<p>库文件无论是动态库还是静态库在其文件中都包含对应的节，一些特殊的节其功能如下：</p>
-<ul>
-<li><code>.bss</code> ，类型 <code>SHT_NOBITS</code> ，属性 <code>SHF_ALLOC|SHF_WRITE</code> ：存储未经初始化的数据。根据定义程序开始执行时，系统会将这些数据初始化为0，且此节不占用文件空间；</li>
-<li><code>.comment</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>none</code> ：存储版本控制信息；</li>
-<li><code>.data</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC|SHF_WRITE</code> ：存放初始化的数据；</li>
-<li><code>.data1</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC|SHF_WRITE</code> ：存放初始化的数据；</li>
-<li><code>.debug</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>none</code> ：存放用于符号调试的信息；</li>
-<li><code>.dynamic</code> ，类型 <code>SHT_DYNAMIC</code> ，属性 <code>SHF_ALLOC</code> ，是否有属性SHF_WRITE屈居于处理器：包含动态链接的信息，</li>
-<li><code>.hash</code> ，类型 <code>SHT_HASH</code> ，属性 <code>SHF_ALLOC</code> ：</li>
-<li><code>.line</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>none</code> ：存储调试的行号信息，描述源代码和机器码之间的对应关系；</li>
-<li><code>.note</code> ，类型 <code>SHT_NOTE</code> ，属性 <code>none</code> ：</li>
-<li><code>.rodata</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC</code> ：存储只读数据；</li>
-<li><code>.rodata1</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC</code> ：存储只读数据；</li>
-<li><code>.shstrtab</code> ，类型 <code>SHT_STRTAB</code> ，属性 <code>none</code> ：存储节的名称；</li>
-<li><code>.strtab</code> ，类型 <code>SHT_STRTAB</code> ：存储常见的与符号表关联的字符串。如果文件有一个包含符号字符串表的可加载段，则该段的属性将包括 <code>SHF_ALLOC</code> 位； 否则，该位将关闭；</li>
-<li><code>.symtab</code> ，类型 <code>SHT_SYMTAB</code> ，属性 ? ：存储一个符号表。如果文件具有包含符号表的可加载段，则该节的属性将包括  <code>SHF_ALLOC</code> 位；否则，该位将关闭；</li>
-<li><code>.text</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC|SHF_EXECINSTR</code> ：存储程序的代码指令；</li>
-<li><code>.dynstr</code> ，类型 <code>SHT_STRTAB</code> ，属性 <code>SHF_ALLOC</code> ：存储动态链接所需的字符串，最常见的是表示与符号表条目关联的名称的字符串；</li>
-<li><code>.dynsym</code> ，类型 <code>SHT_DYNSYM</code> ，属性 <code>SHF_ALLOC</code> ：存储动态链接符号表；</li>
-<li><code>.fini</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC|SHF_EXECINSTR</code> ：存储有助于进程终止代码的可执行指令。 当程序正常退出时，系统执行本节代码；</li>
-<li><code>.init</code> ，类型 <code>SHT_PROGBITS</code> ，属性 <code>SHF_ALLOC|SHF_EXECINSTR</code> ：存储有助于进程初始化代码的可执行指令。 当程序开始运行时，系统会在调用主程序入口点（C 程序称为 main）之前执行本节中的代码；</li>
-<li><code>.interp</code> ，类型 <code>SHT_PROGBITS</code> ：保存程序解释器的路径名。 如果文件有一个包含该节的可加载段，则该节的属性将包括 SHF_ALLOC 位； 否则，该位将关闭；</li>
-<li><code>.relname</code> ，类型 <code>SHT_REL</code> ：包含重定位信息。如果文件具有包含重定位的可加载段，则这些部分的属性将包括 <code>SHF_ALLOC</code> 位；否则，该位将关闭。通常，名称由 重定位适用的部分。因此 .text 的重定位部分通常具有名称 <code>.rel.text</code> 或 <code>.rela.text</code> ；</li>
-<li><code>.relaname</code> ，类型 <code>SHT_RELA</code> ：同 <code>.relname</code>。</li>
-<li>其他：对于 C++ 程序有些版本会有：<code>.ctors</code>（有时也会是 <code>.init_array</code> ）和 <code>.dtors</code> 两个节存储构造和析构相关的代码。</li>
-</ul>
-<h2 id="字符串表"><a class="markdownIt-Anchor" href="#字符串表"></a> 字符串表</h2>
-<p>字符串表是一个存储字符串的表格，而每个字符串是以 <code>NULL</code> 也就是 <code>'\0'</code> 为结尾的。字符串表格中索引为 0 处的字符串被定义为空字符串。符号表中保存的字符串是节名和目标文件中使用到的符号。而需要使用对应字符串时，只需要在需要使用的地方指明对应字符在字符串表中的索引即可，使用的字符串就是索引处到第一个 <code>'\0'</code> 之间的字符串。</p>
-<h2 id="符号表"><a class="markdownIt-Anchor" href="#符号表"></a> 符号表</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">elf32_sym</span>&#123;</span></span><br><span class="line">  Elf32_Word    st_name;  <span class="comment">/* Symbol name, index in string tbl */</span></span><br><span class="line">  Elf32_Addr    st_value; <span class="comment">/* Value of the symbol */</span></span><br><span class="line">  Elf32_Word    st_size;  <span class="comment">/* Associated symbol size */</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> st_info;  <span class="comment">/* Type and binding attributes */</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">char</span> st_other; <span class="comment">/* No defined meaning, 0 */</span></span><br><span class="line">  Elf32_Hal     st_shndx; <span class="comment">/* Associated section index */</span></span><br><span class="line">&#125; Elf32_Sym;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>
-<p><code>st_name</code>：存储一个指向字符串表的索引来表示对应符号的名称；</p>
-</li>
-<li>
-<p><code>st_value</code>：存储对应符号的取值，具体值依赖于上下文，可能是一个指针地址，立即数等。另外，不同对象文件类型的符号表条目对 <code>st_value</code> 成员的解释略有不同：</p>
-<ul>
-<li>在重定位文件中在可重定位文件中，<code>st_value</code> 保存节索引为 <code>SHN_COMMON</code> 的符号的对齐约束；</li>
-<li>在可重定位文件中，<code>st_value</code> 保存已定义符号的节偏移量。 也就是说，<code>st_value</code> 是从 <code>st_shndx</code> 标识的部分的开头的偏移量；</li>
-<li>在可执行文件和共享对象文件中，<code>st_value</code> 保存一个虚拟地址。 为了使这些文件的符号对动态链接器更有用，节偏移（文件解释）让位于与节号无关的虚拟地址（内存解释）。</li>
-</ul>
-</li>
-<li>
-<p><code>st_size</code>：符号的大小，具体指为 <code>sizeof(instance)</code> ，如果未知则为 0 ；</p>
-</li>
-<li>
-<p><code>st_info</code>：指定符号的类型和绑定属性。可以用下面的代码分别解析出 <code>bind</code> , <code>type</code> , <code>info</code> 三个属性：</p>
- <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ELF32_ST_BIND(i)    ((i)&gt;&gt;4) </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ELF32_ST_TYPE(i)    ((i)&amp;0xf) </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ELF32_ST_INFO(b,t)  (((b)&lt;&lt;4)+((t)&amp;0xf))</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>
-<p><code>BIND</code></p>
-<ul>
-<li><code>STB_LOCAL(0)</code>：局部符号在包含其定义的目标文件之外是不可见的。 同名的本地符号可以存在于多个文件中，互不干扰；</li>
-<li><code>STB_GLOBAL(1)</code>：全局符号对所有正在组合的目标文件都是可见的。 一个文件对全局符号的定义将满足另一个文件对同一全局符号的未定义引用；</li>
-<li><code>STB_WEAK(2)</code>：弱符号类似于全局符号，但它们的定义具有较低的优先级；</li>
-<li><code>[STB_LOPROC(13),STB_HIPROC(15)]</code>：预留位，用于特殊处理器的特定含义；</li>
-</ul>
-</li>
-<li>
-<p><code>TYPE</code></p>
-<ul>
-<li><code>STT_NOTYPE(0)</code>：符号的类型未指定；</li>
-<li><code>STT_OBJECT(1)</code>：符号与数据对象相关联，例如变量、数组等；</li>
-<li><code>STT_FUNC(2)</code>：符号与函数或其他可执行代码相关联；</li>
-<li><code>STT_SECTION(3)</code>：该符号与一个节相关联。 这种类型的符号表条目主要用于重定位，通常具有 <code>STB_LOCALBIND</code> 属性；</li>
-<li><code>STT_FILE(4)</code>：一个有 <code>STB_LOCAL</code> 的 <code>BIND</code> 属性的文件符号的节索引为 <code>SHN_ABS</code> 。并且如果存在其他 <code>STB_LOCAL</code> 属性的符号，则当前符号应该在其之前；</li>
-<li><code>[STT_LOPROC(13),STT_HIPROC(15)]</code>：预留位，用于特殊处理器的特定含义；</li>
-</ul>
-</li>
-<li>
-<p><code>INFO</code></p>
-<ul>
-<li><code>SHN_ABS</code>：符号有一个绝对值，不会因为重定位而改变；</li>
-<li><code>SHN_COMMON</code>：该符号标记尚未分配的公共块。 符号的值给出了对齐约束，类似于节的 <code>sh_addralign</code> 成员。 也就是说，链接编辑器将为符号分配存储空间，该地址是 <code>st_value</code> 的倍数。 符号的大小表明需要多少字节；</li>
-<li><code>SHN_UNDEF</code>：此节表索引表示该符号未定义。 当链接编辑器将此对象文件与另一个定义指定符号的文件组合时，此文件对符号的引用将链接到实际定义；</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><code>st_other</code>：该成员当前持有 0 并且没有定义的含义；</p>
-</li>
-<li>
-<p><code>st_shndx</code>：每个符号都有属于的节，当前成员存储的就是对应节的索引。</p>
-</li>
-</ol>
-<hr />
-<p>参考资料：</p>
-<ol>
-<li>ELF <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/ELF/7120560">https://baike.baidu.com/item/ELF/7120560</a></li>
-<li>ELF Format 笔记（二）—— ELF Header <a target="_blank" rel="noopener" href="https://www.cnblogs.com/ilocker/p/4572846.html">https://www.cnblogs.com/ilocker/p/4572846.html</a></li>
-<li>ELF文件格式简介 <a target="_blank" rel="noopener" href="https://blog.csdn.net/GrayOnDream/article/details/124564129">https://blog.csdn.net/GrayOnDream/article/details/124564129</a></li>
-<li>ELF文件格式简介 <a target="_blank" rel="noopener" href="https://it.cha138.com/javascript/show-87003.html">https://it.cha138.com/javascript/show-87003.html</a></li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/21/ELF-Format/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1468,7 +1142,6 @@
   
 
 
-
 <script>
 NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
@@ -1496,6 +1169,7 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   }, window.Valine);
 });
 </script>
+
 
 </body>
 </html>
