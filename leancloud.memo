@@ -13,4 +13,11 @@
 {"title":"APK Dynamic Debug","url":"/2023/01/28/Apk-Dynamic-Debug/"},
 {"title":"Setting the Default DPI Awareness for a Process","url":"/2023/02/09/Setting-the-Default-DPI-Awareness-for-a-Process/"},
 {"title":"Some Differences Between C and CPP","url":"/2023/02/19/Some-Differences-Between-C-and-CPP/"},
+{"title":"Android Application Localization","url":"/2023/06/25/Android-Application-Localization/"},
+{"title":"Smali","url":"/2023/07/01/Smali/"},
+{"title":"APK Dynamic Debug Plus","url":"/2023/07/04/Apk-Dynamic-Debug-Plus/"},
+{"title":"C++ Knowledge Points","url":"/2023/07/27/CPP-Knowledge-Points/"},
+{"title":"Flutter Android Gets Full Storage Access","url":"/2023/09/06/Flutter-Android-Gets-Full-Storage-Access/"},
+{"title":"Flutter Android Blocks Full Screen Return Gestures","url":"/2023/09/07/Flutter-Android-Blocks-Full-Screen-Return-Gestures/"},
+{"title":"Some Problems with Tauri Saving Files via the FS API (writeTextFile)","url":"/2023/09/08/Some-Problems-with-Tauri-Saving-Files-via-the-FS-API-writeTextFile/"},
 ]

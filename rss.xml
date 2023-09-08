@@ -62,13 +62,9 @@
       <guid>https://linjhs.top/2023/09/06/Flutter-Android-Gets-Full-Storage-Access/</guid>
       <pubDate>Wed, 06 Sep 2023 12:20:41 GMT</pubDate>
       
-        
-        
-          
-          
-      <description></description>
-          
-        
+      <description>&lt;h1 id=&quot;flutter-android-获取完全的存储权限&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#flutter-android-获取完全的存储权限&quot;&gt;&lt;/a&gt; Flutter Android 获取完全的存储权限&lt;/h1&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;自己开发的一个APP，需要获得手机完全的存储权限，但由于 Android 在高版本中引入了分区存储的概念，所以需要的权限申请比较复杂。&lt;/p&gt;</description>
       
       
       
