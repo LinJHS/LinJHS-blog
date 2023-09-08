@@ -9,8 +9,177 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Mon, 20 Feb 2023 00:38:57 GMT</pubDate>
+    <pubDate>Fri, 08 Sep 2023 13:26:50 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Some Problems with Tauri Saving Files via the FS API (writeTextFile)</title>
+      <link>https://linjhs.top/2023/09/08/Some-Problems-with-Tauri-Saving-Files-via-the-FS-API-writeTextFile/</link>
+      <guid>https://linjhs.top/2023/09/08/Some-Problems-with-Tauri-Saving-Files-via-the-FS-API-writeTextFile/</guid>
+      <pubDate>Fri, 08 Sep 2023 13:24:11 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;tauri-通过-fs-api-writetextfile-保存文件的一些问题&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#tauri-通过-fs-api-writetextfile-保存文件的一些问题&quot;&gt;&lt;/a&gt; Tauri 通过 FS API (writeTextFile) 保存文件的一些问题&lt;/h1&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;我在使用 FS API 进行文件读写，但遇到了一些问题。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/Tauri/">Tauri</category>
+      
+      
+      <comments>https://linjhs.top/2023/09/08/Some-Problems-with-Tauri-Saving-Files-via-the-FS-API-writeTextFile/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Flutter Android Blocks Full Screen Return Gestures</title>
+      <link>https://linjhs.top/2023/09/07/Flutter-Android-Blocks-Full-Screen-Return-Gestures/</link>
+      <guid>https://linjhs.top/2023/09/07/Flutter-Android-Blocks-Full-Screen-Return-Gestures/</guid>
+      <pubDate>Thu, 07 Sep 2023 10:12:30 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;flutter-android-阻止全面屏返回手势&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#flutter-android-阻止全面屏返回手势&quot;&gt;&lt;/a&gt; Flutter Android 阻止全面屏返回手势&lt;/h1&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;为了防止用户不小心滑到屏幕退出APP，我们可以阻止返回消息。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      <category domain="https://linjhs.top/tags/Flutter/">Flutter</category>
+      
+      
+      <comments>https://linjhs.top/2023/09/07/Flutter-Android-Blocks-Full-Screen-Return-Gestures/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Flutter Android Gets Full Storage Access</title>
+      <link>https://linjhs.top/2023/09/06/Flutter-Android-Gets-Full-Storage-Access/</link>
+      <guid>https://linjhs.top/2023/09/06/Flutter-Android-Gets-Full-Storage-Access/</guid>
+      <pubDate>Wed, 06 Sep 2023 12:20:41 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description></description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      <category domain="https://linjhs.top/tags/Flutter/">Flutter</category>
+      
+      
+      <comments>https://linjhs.top/2023/09/06/Flutter-Android-Gets-Full-Storage-Access/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>C++ Knowledge Points</title>
+      <link>https://linjhs.top/2023/07/27/CPP-Knowledge-Points/</link>
+      <guid>https://linjhs.top/2023/07/27/CPP-Knowledge-Points/</guid>
+      <pubDate>Thu, 27 Jul 2023 10:00:51 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description></description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/C/">C++</category>
+      
+      
+      <comments>https://linjhs.top/2023/07/27/CPP-Knowledge-Points/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>APK Dynamic Debug Plus</title>
+      <link>https://linjhs.top/2023/07/04/Apk-Dynamic-Debug-Plus/</link>
+      <guid>https://linjhs.top/2023/07/04/Apk-Dynamic-Debug-Plus/</guid>
+      <pubDate>Tue, 04 Jul 2023 04:07:21 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;安卓动态调试进阶&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#安卓动态调试进阶&quot;&gt;&lt;/a&gt; 安卓动态调试进阶&lt;/h1&gt;
+&lt;p&gt;本文记录了安卓动调以及 Log 插桩。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      
+      <comments>https://linjhs.top/2023/07/04/Apk-Dynamic-Debug-Plus/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Smali</title>
+      <link>https://linjhs.top/2023/07/01/Smali/</link>
+      <guid>https://linjhs.top/2023/07/01/Smali/</guid>
+      <pubDate>Sat, 01 Jul 2023 05:48:55 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;初识-smali&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#初识-smali&quot;&gt;&lt;/a&gt; 初识 smali&lt;/h1&gt;
+&lt;p&gt;简单记一下，大部分都是大佬的文章摘抄过来的，原文地址在本文文末。&lt;/p&gt;
+&lt;p&gt;本文主要是方便后续需要查找使用。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      
+      <comments>https://linjhs.top/2023/07/01/Smali/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Android Application Localization</title>
+      <link>https://linjhs.top/2023/06/25/Android-Application-Localization/</link>
+      <guid>https://linjhs.top/2023/06/25/Android-Application-Localization/</guid>
+      <pubDate>Sun, 25 Jun 2023 09:28:56 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;安卓应用汉化&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#安卓应用汉化&quot;&gt;&lt;/a&gt; 安卓应用汉化&lt;/h1&gt;
+&lt;p&gt;很简单，记一下，怕忘了。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      
+      <comments>https://linjhs.top/2023/06/25/Android-Application-Localization/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Some Differences Between C and CPP</title>
