@@ -176,6 +176,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LinJHS">
+      <meta itemprop="description" content="This is LinJHS's blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LinJHS's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/" class="post-title-link" itemprop="url">TSCTF-J 2023 Reverse The_Native WP</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-25 16:21:42 / 修改时间：21:04:50" itemprop="dateCreated datePublished" datetime="2023-09-25T16:21:42+08:00">2023-09-25</time>
+            </span>
+
+          
+            <span id="/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/" class="post-meta-item leancloud_visitors" data-flag-title="TSCTF-J 2023 Reverse The_Native WP" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="tsctf-j-2023-reverse-the_native-wp"><a class="markdownIt-Anchor" href="#tsctf-j-2023-reverse-the_native-wp"></a> TSCTF-J 2023 Reverse The_Native WP</h1>
+<p>这次浅浅出了一道题，安卓逆向，其实<strong>相当简单</strong>，只要下载工具并且有<strong>一点点</strong>的安卓开发经验就行了（甚至都没加花加壳~~（原来打算 OLLVM 的，后来想想估计得零解就没弄）~~）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://linjhs.top/2023/09/08/Some-Problems-with-Tauri-Saving-Files-via-the-FS-API-writeTextFile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -450,7 +526,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-08-09 21:48:22" itemprop="dateModified" datetime="2023-08-09T21:48:22+08:00">2023-08-09</time>
+                <time title="修改时间：2023-09-08 21:41:53" itemprop="dateModified" datetime="2023-09-08T21:41:53+08:00">2023-09-08</time>
               </span>
 
           
@@ -474,73 +550,14 @@
 
       
           <h1 id="c-中的一些知识点总结"><a class="markdownIt-Anchor" href="#c-中的一些知识点总结"></a> C++ 中的一些知识点总结</h1>
-<h2 id="01-static"><a class="markdownIt-Anchor" href="#01-static"></a> 01 static</h2>
-<h3 id="011-静态全局变量"><a class="markdownIt-Anchor" href="#011-静态全局变量"></a> 01.1 静态全局变量</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> s_Variable = <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>【初始化】如果没有显式的初始化，则自动被程序初始化为 <code>0</code>；</li>
-<li>【可见性】在声明它的整个文件中都是可见的，而在文件之外是不可见的；</li>
-<li>【内存】在全局数据区分配内存；</li>
-<li>【同名冲突】其他文件中可以定义同名 <code>int</code> 型变量 <code>s_Variable</code>，不会冲突（注：不能有两个同名的全局变量）；</li>
-</ol>
-<h3 id="012-静态局部变量"><a class="markdownIt-Anchor" href="#012-静态局部变量"></a> 01.2 静态局部变量</h3>
-<ol>
-<li>【初始化】如果没有显式的初始化，则自动被程序<strong>初始化</strong>为 <code>0</code>；静态局部变量在程序执行到该对象声明时，会被首次初始化，其后运行到该对象的声明时，不会再次初始化，<strong>只会被初始化一次</strong>；</li>
-<li>【可见性】不能被其作用域之外的其他模块调用；</li>
-<li>【内存】在<strong>全局数据区</strong>分配内存；</li>
-<li>【生命周期】不管是全局还是局部，其生命周期与程序相同；</li>
-</ol>
-<h3 id="013-静态函数"><a class="markdownIt-Anchor" href="#013-静态函数"></a> 01.3 静态函数</h3>
-<ol>
-<li>【作用域】作用域只在声明它的文件当中，不能被其他文件引用，其他文件可以定义同名的全局函数；</li>
-</ol>
-<h3 id="014-静态成员变量"><a class="markdownIt-Anchor" href="#014-静态成员变量"></a> 01.4 静态成员变量</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Entity</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> x;</span><br><span class="line">    <span class="type">const</span> <span class="type">static</span> <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> Entity::x; <span class="comment">// 初始化静态成员变量</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> Entity::y = <span class="number">5</span>; <span class="comment">// 定义的时候也要写 const</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Entity::x = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>【共享】静态成员变量独立存在，属于类而不属于对象，类的所有的实例共享同一个 <code>static</code> 类成员；</li>
-<li>【初始化】静态数据成员必须显式的初始化分配内存，类内声明类外定义；</li>
-<li>【内存】在编译阶段就分配好空间，对象还没创建的时候就有了空间，存储在<strong>全局数据区</strong>；</li>
-<li>【权限】他们仍然遵从 <code>public/private/protected</code> 规定的权限</li>
-</ol>
-<h3 id="015-静态成员函数"><a class="markdownIt-Anchor" href="#015-静态成员函数"></a> 01.5 静态成员函数</h3>
-<ol>
-<li>【调用】静态成员函数多了一种调用方式，在没有实例化的类对象的条件下可以调用类的静态成员函数；</li>
-<li>【访问】静态成员函数中没有隐含的 <code>this</code> 指针，所以静态成员函数不可以操作类中的<strong>非静态成员</strong>，只能访问 <code>static</code> 修饰的类成员；</li>
-<li>【声明】静态成员函数<strong>不能声明</strong>为 <code>const</code> <code>virtual</code> <code>volatile</code></li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个简单的用法</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Singleton</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Singleton&amp; <span class="title">Get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">static</span> Singleton instance;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Hello</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Singleton::<span class="built_in">Get</span>().<span class="built_in">Hello</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="02-枚举类型-enum"><a class="markdownIt-Anchor" href="#02-枚举类型-enum"></a> 02 枚举类型 enum</h2>
-<h3 id="021-作用域"><a class="markdownIt-Anchor" href="#021-作用域"></a> 02.1 作用域</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认从 0 开始</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line">color col = RED;</span><br><span class="line">color col = color::RED;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 限定作用域</span></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line"><span class="comment">// color col = RED; // 错误！</span></span><br><span class="line">color col = color::RED;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以在类内</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Entity</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">Level</span> &#123; Err, Warn, Info &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">Entity::Err;</span><br></pre></td></tr></table></figure>
-<h3 id="022-初始化"><a class="markdownIt-Anchor" href="#022-初始化"></a> 02.2 初始化</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从 5 开始</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Example</span> &#123; Val_1 = <span class="number">5</span>, Val_2, Val_3 &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 全部指定</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Example</span> &#123; Val_1 = <span class="number">3</span>, Val_2 = <span class="number">7</span>, Val_3 = <span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指定部分，此时，Val_2 为 4</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Example</span> &#123; Val_1 = <span class="number">3</span>, Val_2, Val_3 = <span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重复指定</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Example</span> &#123; Val_1 = <span class="number">3</span>, Val_2 = <span class="number">7</span>, Val_3 = <span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="023-指定枚举类型"><a class="markdownIt-Anchor" href="#023-指定枚举类型"></a> 02.3 指定枚举类型</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注意，不能指定非整数类型</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">color</span>:<span class="type">unsigned</span> <span class="type">long</span></span><br><span class="line">&#123;</span><br><span class="line">    RED = <span class="number">1</span>,</span><br><span class="line">    GREEN = <span class="number">5</span>,</span><br><span class="line">    BLUE = <span class="number">7</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="023-声明与赋值"><a class="markdownIt-Anchor" href="#023-声明与赋值"></a> 02.3 声明与赋值</h3>
-<p>类似结构体</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line">color c = RED;</span><br></pre></td></tr></table></figure>
-<h2 id="03-类"><a class="markdownIt-Anchor" href="#03-类"></a> 03 类</h2>
-<h3 id="031-构造函数与析构函数"><a class="markdownIt-Anchor" href="#031-构造函数与析构函数"></a> 03.1 构造函数与析构函数</h3>
-<p>这里只介绍部分用法</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不希望创建实例</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Entity</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// Entity(); // 也可以写在 private 里隐藏构造函数</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Entity</span>() = <span class="keyword">delete</span>; <span class="comment">// 不允许构造函数</span></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">Get</span><span class="params">()</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Entity</span>: <span class="keyword">public</span> A <span class="comment">// 继承</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    A a;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Entity</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c, <span class="type">int</span> d)</span><br><span class="line">        : <span class="built_in">A</span>(a, b) <span class="comment">// 初始化基类的成员数据</span></span><br><span class="line">        , <span class="built_in">a</span>(c, d) <span class="comment">// 初始化成员的数据</span></span><br><span class="line">    &#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>析构函数没有参数，不能被重载</p>
-<p>先到这里吧，以后再说。</p>
-<hr />
-<p>参考链接：</p>
-<ol>
-<li>c++——static 总结 <a target="_blank" rel="noopener" href="https://blog.csdn.net/www_dong/article/details/116102066">https://blog.csdn.net/www_dong/article/details/116102066</a></li>
-<li>c++ static 静态变量、静态函数 <a target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_16370559/article/details/91781127">https://blog.csdn.net/baidu_16370559/article/details/91781127</a></li>
-<li>C++之静态成员变量 <a target="_blank" rel="noopener" href="https://blog.csdn.net/z1zyy/article/details/128038036">https://blog.csdn.net/z1zyy/article/details/128038036</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1rb411d7mS">https://www.bilibili.com/video/BV1rb411d7mS</a></li>
-<li>static 成员函数不能被声明为 const virtual volatile 原因 <a target="_blank" rel="noopener" href="https://blog.csdn.net/Sansipi/article/details/121378929">https://blog.csdn.net/Sansipi/article/details/121378929</a></li>
-<li>C++枚举enum使用详解 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35902025/article/details/127567837">https://blog.csdn.net/qq_35902025/article/details/127567837</a></li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/07/27/CPP-Knowledge-Points/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -949,88 +966,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://linjhs.top/2023/01/28/Apk-Dynamic-Debug/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="LinJHS">
-      <meta itemprop="description" content="This is LinJHS's blog">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LinJHS's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/28/Apk-Dynamic-Debug/" class="post-title-link" itemprop="url">APK Dynamic Debug</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-28 17:57:56" itemprop="dateCreated datePublished" datetime="2023-01-28T17:57:56+08:00">2023-01-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-11 17:18:26" itemprop="dateModified" datetime="2023-02-11T17:18:26+08:00">2023-02-11</time>
-              </span>
-
-          
-            <span id="/2023/01/28/Apk-Dynamic-Debug/" class="post-meta-item leancloud_visitors" data-flag-title="APK Dynamic Debug" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="apk-动态调试入门"><a class="markdownIt-Anchor" href="#apk-动态调试入门"></a> APK 动态调试入门</h1>
-<p>本文记录了简单的 apk 动调的方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/28/Apk-Dynamic-Debug/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1100,7 +1035,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

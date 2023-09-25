@@ -9,8 +9,32 @@
     <atom:link href="https://linjhs.top/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>This is LinJHS&#39;s blog</description>
-    <pubDate>Fri, 08 Sep 2023 13:26:50 GMT</pubDate>
+    <pubDate>Mon, 25 Sep 2023 13:04:50 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>TSCTF-J 2023 Reverse The_Native WP</title>
+      <link>https://linjhs.top/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/</link>
+      <guid>https://linjhs.top/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/</guid>
+      <pubDate>Mon, 25 Sep 2023 08:21:42 GMT</pubDate>
+      
+      <description>&lt;h1 id=&quot;tsctf-j-2023-reverse-the_native-wp&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#tsctf-j-2023-reverse-the_native-wp&quot;&gt;&lt;/a&gt; TSCTF-J 2023 Reverse The_Native WP&lt;/h1&gt;
+&lt;p&gt;这次浅浅出了一道题，安卓逆向，其实&lt;strong&gt;相当简单&lt;/strong&gt;，只要下载工具并且有&lt;strong&gt;一点点&lt;/strong&gt;的安卓开发经验就行了（甚至都没加花加壳~~（原来打算 OLLVM 的，后来想想估计得零解就没弄）~~）。&lt;/p&gt;</description>
+      
+      
+      
+      
+      
+      <category domain="https://linjhs.top/tags/CTF/">CTF</category>
+      
+      <category domain="https://linjhs.top/tags/Reverse/">Reverse</category>
+      
+      <category domain="https://linjhs.top/tags/Android/">Android</category>
+      
+      
+      <comments>https://linjhs.top/2023/09/25/TSCTF-J-2023-Reverse-The-Native-WP/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Some Problems with Tauri Saving Files via the FS API (writeTextFile)</title>
@@ -85,13 +109,7 @@
       <guid>https://linjhs.top/2023/07/27/CPP-Knowledge-Points/</guid>
       <pubDate>Thu, 27 Jul 2023 10:00:51 GMT</pubDate>
       
-        
-        
-          
-          
-      <description></description>
-          
-        
+      <description>&lt;h1 id=&quot;c-中的一些知识点总结&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#c-中的一些知识点总结&quot;&gt;&lt;/a&gt; C++ 中的一些知识点总结&lt;/h1&gt;</description>
       
       
       
